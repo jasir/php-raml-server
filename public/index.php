@@ -13,6 +13,8 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
+require_once("Library/Route/Processor.php");
+
 // set response headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: OPTIONS, GET, POST');
@@ -45,7 +47,10 @@ foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
 
     $type = strtolower($route['method']->getType());
     $app->$type("/" . $apiDef->getVersion() . $route['path'], $authenticate($app), function () use ($app, $route) {
-        
+        $routeProcessor = new Processor();
+        $app->response->headers->set('Content-Type', 'application/json'); //default response type
+        $response = $routeProcessor::process($route, $app->request());
+        $app->response->setBody($response);
     });
 
     // $class = new ReflectionClass('Route');
