@@ -45,9 +45,10 @@ foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
 
     $type = strtolower($route['method']->getType());
     $app->$type("/" . $apiDef->getVersion() . $route['path'], $authenticate($app), function () use ($app, $route) {
-        $routeProcessor = new Processor();
+        $routeProcessor = new Processor($app->container, $route);
+        $response = $routeProcessor->getResponse();
+
         $app->response->headers->set('Content-Type', 'application/json'); //default response type
-        $response = $routeProcessor::process($route, $app->request());
         $app->response->setBody($response);
     });
 

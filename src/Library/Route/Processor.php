@@ -1,28 +1,35 @@
 <?php
 
 // namespace Library\Route;
+use Slim\Helper\Set;
 
 class Processor
 {
 
+    private $appContainer;
+    private $route;
+    private $response;
 
-    public static function process($route, $request)
+    public function __construct(Set $appContainer, array $route)
     {
-        $pathinfo = pathinfo ($route['path']);
+        $this->appContainer = $appContainer;
+        $this->route = $route;
 
+
+        $pathinfo = pathinfo ($this->route['path']);
         //trim the leading slash
         $dirname = ltrim ($pathinfo['dirname'], '/');
         //replace slashes with underscores and append basename
         $method = $dirname ? str_replace("/", "_", $dirname) . "_" . $pathinfo['basename'] : $pathinfo['basename'];
 
         // execute the method
-        return self::$method($route, $request);
+        $this->response = $this->$method();
 
     }
 
-    private static function returnExample($route, $request)
+    private function getExampleBody()
     {
-        $responses = $route['method']->getResponses();
+        $responses = $this->route['method']->getResponses();
         foreach ($responses as $response) {
             try {
                 return $response->getBodyByType('application/json')->getExample();
@@ -32,15 +39,19 @@ class Processor
         }
     }
 
-
-    // Begin API methods
-
-    private static function correction ($route, $request)
+    public function getResponse()
     {
-        return self::returnExample($route, $request);
+        return $this->response;
     }
 
-    private static function hello ($route, $request) 
+
+    // Begin API methods
+    private function correction ()
+    {
+        return $this->getExampleBody();
+    }
+
+    private function hello () 
     {
         $response = new stdClass();
         $response->message = "hello";
