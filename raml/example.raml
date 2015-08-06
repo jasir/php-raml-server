@@ -49,14 +49,17 @@ baseUri: https://api.github.com
               }
             example: |
               {
-                "release_correction_id": 1234,
-                "release_id": 678910,
-                "status": "active",
-                "last_updated": "2011-08-24 06:09:02",
-                "last_updated_by": 12026,
-                "last_updated_type": "vendor"
+                "status": 200,
+                "success": true,
+                "data": {
+                  "release_correction_id": 1234,
+                  "release_id": 678910,
+                  "status": "active",
+                  "last_updated": "2011-08-24 06:09:02",
+                  "last_updated_by": 12026,
+                  "last_updated_type": "vendor"
+                }
               }
-
       204:
         description: No correction information available
         body: null
@@ -75,36 +78,32 @@ baseUri: https://api.github.com
               {
                 "$schema": "http://json-schema.org/draft-03/schema",
                 "properties": {
-                  "data": {
-                    "properties": {
-                      "release_correction_id": {
-                        "type": "int",
-                        "required": true
-                      },
-                      "release_id": {
-                        "type": "int",
-                        "required": true
-                      },
-                      "status": {
-                        "type": "string",
-                        "required": true
-                      },
-                      "last_updated": {
-                        "type": "string",
-                        "required": true
-                      },
-                      "last_updated_by": {
-                        "type": "int",
-                        "required": true
-                      },
-                      "last_updated_type": {
-                        "type": "string",
-                        "required": true
-                      }
-                    },
-                    "required": true,
-                    "type": "object"
-                  }
+                  "release_correction_id": {
+                    "type": "int",
+                    "required": true
+                  },
+                  "release_id": {
+                    "type": "int",
+                    "required": true
+                  },
+                  "status": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "last_updated": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "last_updated_by": {
+                    "type": "int",
+                    "required": true
+                  },
+                  "last_updated_type": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "required": true,
+                  "type": "object"
                 },
                 "required": true,
                 "type": "object"
@@ -112,12 +111,16 @@ baseUri: https://api.github.com
 
             example: |
               {
-                release_correction_id: 1234,
-                release_id: 678910,
-                status: "active",
-                last_updated: "2011-08-24 06:09:02",
-                last_updated_by: 12026,
-                last_updated_type: "vendor"
+                "status": 200,
+                "success": true,
+                "data": {
+                  "release_correction_id": 1234,
+                  "release_id": 678910,
+                  "status": "active",
+                  "last_updated": "2011-08-24 06:09:02",
+                  "last_updated_by": 12026,
+                  "last_updated_type": "vendor"
+                }
               }
   patch:
     description: Updates a `releaseCorrection` record
@@ -167,16 +170,17 @@ baseUri: https://api.github.com
               }
             example: |
               {
-                release_correction_id: 1234,
-                release_id: 678910,
-                status: "active",
-                last_updated: "2011-08-24 06:09:02",
-                last_updated_by: 12026,
-                last_updated_type: "vendor"
+                "status": 200,
+                "success": true,
+                "data": {
+                  "release_correction_id": 1234,
+                  "release_id": 678910,
+                  "status": "active",
+                  "last_updated": "2011-08-24 06:09:02",
+                  "last_updated_by": 12026,
+                  "last_updated_type": "vendor"
+                }
               }
-      400:
-        description: Bad request, most likely an invalid status ENUM
-        body: null
       404:
         description: Requested `releaseCorrection` does not exist
 /correction/details:
@@ -709,57 +713,59 @@ baseUri: https://api.github.com
               }
             example: |
               {
-                'release_id': 1234,
-                'correction_id': 5678,
-                'corrections': {
-                  'releases': {
-                    'release_name': {
-                      'correction': 'Fake release',
-                      'rejection_note': NULL
-                    },
-                    'primary': {
-                      'correction': [
-                        {
-                          artist_name: 'Test',
-                          role: 'primary'
-                        }
-                      ],
-                      'rejection_note': 'Ya goofed'
+                data: {
+                  'release_id': 1234,
+                  'correction_id': 5678,
+                  'corrections': {
+                    'releases': {
+                      'release_name': {
+                        'correction': 'Fake release',
+                        'rejection_note': NULL
+                      },
+                      'primary': {
+                        'correction': [
+                          {
+                            artist_name: 'Test',
+                            role: 'primary'
+                          }
+                        ],
+                        'rejection_note': 'Ya goofed'
+                      }
                     }
-                  }
-                },
-                'track': {
-                  1234565: {
-                    'track_name': {
-                      'correction': 'My Track',
-                      'rejection_note': NULL
-                    },
-                    'featuring': {
-                      'correction': [
-                        {
-                          artist_name: 'Test',
-                          role: 'primary'
-                        }
-                      ],
-                      'rejection_note': 'Ya goofed'
+                  },
+                  'track': {
+                    1234565: {
+                      'track_name': {
+                        'correction': 'My Track',
+                        'rejection_note': NULL
+                      },
+                      'featuring': {
+                        'correction': [
+                          {
+                            artist_name: 'Test',
+                            role: 'primary'
+                          }
+                        ],
+                        'rejection_note': 'Ya goofed'
+                      }
                     }
-                  }
-                },
-                  1234565: {
-                    'original_file_name': {
-                      'correction': 'track_2.wav',
-                      'rejection_note': NULL
-                    },
-                    'track_artist': {
-                      'correction': [
-                        {
-                          name: 'Test',
-                          type: 'performer'
-                        }
-                      ],
-                      'rejection_note': 'Ya goofed'
+                  },
+                    1234565: {
+                      'original_file_name': {
+                        'correction': 'track_2.wav',
+                        'rejection_note': NULL
+                      },
+                      'track_artist': {
+                        'correction': [
+                          {
+                            name: 'Test',
+                            type: 'performer'
+                          }
+                        ],
+                        'rejection_note': 'Ya goofed'
+                      }
                     }
-                  }
+                  },
                 },
                 'success': true,
                 'status': 200
@@ -1291,55 +1297,58 @@ baseUri: https://api.github.com
               }
         example: |
           {
-            "corrections": {
-              "releases": {
-                "release_name": {
-                  "correction": "Fake release",
-                  "rejection_note": null
+            'release_id': 1234,
+            'correction_id': 5678,
+            'corrections': {
+              'releases': {
+                'release_name': {
+                  'correction': 'Fake release',
+                  'rejection_note': NULL
                 },
-                "primary": {
-                  "correction": [
+                'primary': {
+                  'correction': [
                     {
-                      "artist_name": "Test",
-                      "role": "primary"
+                      artist_name: 'Test',
+                      role: 'primary'
                     }
                   ],
-                  "rejection_note": "Ya goofed"
+                  'rejection_note': 'Ya goofed'
                 }
               }
             },
-            "track": {
-              "1234565": {
-                "track_name": {
-                  "correction": "My Track",
-                  "rejection_note": null
+            'track': {
+              1234565: {
+                'track_name': {
+                  'correction': 'My Track',
+                  'rejection_note': NULL
                 },
-                "featuring": {
-                  "correction": [
+                'featuring': {
+                  'correction': [
                     {
-                      "artist_name": "Test",
-                      "role": "primary"
+                      artist_name: 'Test',
+                      role: 'primary'
                     }
                   ],
-                  "rejection_note": "Ya goofed"
-                }
-              },
-              "1234566": {
-                "original_file_name": {
-                  "correction": "track_2.wav",
-                  "rejection_note": null
-                },
-                "track_artist": {
-                  "correction": [
-                    {
-                      "name": "Test",
-                      "type": "performer"
-                    }
-                  ],
-                  "rejection_note": "Ya goofed"
+                  'rejection_note': 'Ya goofed'
                 }
               }
-            }
+            },
+              1234565: {
+                'original_file_name': {
+                  'correction': 'track_2.wav',
+                  'rejection_note': NULL
+                },
+                'track_artist': {
+                  'correction': [
+                    {
+                      name: 'Test',
+                      type: 'performer'
+                    }
+                  ],
+                  'rejection_note': 'Ya goofed'
+                }
+              }
+            },
           }
 /hello:
   get:
@@ -1354,8 +1363,12 @@ baseUri: https://api.github.com
           application/json:
             example: |
               {
-                message: 'hello',
-                test: 'test123'
+                "status": 200,
+                "success": true,
+                "data": {
+                  "message": "hello",
+                  "test": "pizza!!!"
+                }
               }
 /hello/goodbye:
   get:

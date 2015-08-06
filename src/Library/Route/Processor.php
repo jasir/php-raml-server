@@ -32,9 +32,8 @@ class Processor
         } else {
             try {
                 $this->validateRequest();
-                $data = $methods->$method();
+                $this->prepareResponse($methods->$method());
             } catch (\Exception $e) {
-                // var_dump($e->getMessage()); die();
                 $this->appContainer['response']->setStatus(400);
                 $this->appContainer['response']->setBody($e->getMessage());
             }
@@ -44,6 +43,7 @@ class Processor
 
     private function validateRequest()
     {
+
         foreach ($this->route['method']->getQueryParameters() as $namedParameter) {
             if( $namedParameter->isRequired() ){
                 if (!in_array($namedParameter->getKey(), array_keys($this->appContainer['request']->params()))) {
@@ -55,12 +55,14 @@ class Processor
             }
         }
 
+        $schema = null;
         try {
             $schema = $this->route['method']->getBodyByType('application/json')->getSchema();
         } catch (Exception $e) {
         }
 
         if(!is_null($schema)){
+
             if($schema->getJsonObject()->required) {
                 if ($this->appContainer['request']->getBody()=='') {
                     $message = array();
@@ -80,6 +82,15 @@ class Processor
         } catch (Exception $e) {
             return null;
         }
+    }
+
+    public function prepareResponse($data)
+    {
+        $response = new stdClass();
+        $response->status = $this->appContainer['response']->getStatus();
+        $response->success = $this->appContainer['response']->isOk();
+        $response->data = $data;
+        $this->appContainer['response']->setBody(json_encode($response));
     }
 
     public function getResponse()
