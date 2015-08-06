@@ -1,6 +1,6 @@
 <?php
 
-// namespace Library\Route;
+require_once("Library/Route/Methods.php");
 use Slim\Helper\Set;
 
 class Processor
@@ -15,27 +15,31 @@ class Processor
         $this->appContainer = $appContainer;
         $this->route = $route;
 
-
+        // Get the method name
         $pathinfo = pathinfo ($this->route['path']);
         //trim the leading slash
         $dirname = ltrim ($pathinfo['dirname'], '/');
         //replace slashes with underscores and append basename
         $method = $dirname ? str_replace("/", "_", $dirname) . "_" . $pathinfo['basename'] : $pathinfo['basename'];
 
-        // execute the method
-        $this->response = $this->$method();
-
+        
+        $methods = new Methods($appContainer, $route);
+        // check if example response is requested
+        if ($this->appContainer['request']->headers->get('Example-Response-Body')) {
+            $this->response = $this->getExampleResponseBody($this->appContainer['request']->headers->get('Example-Response-Code'));
+            $appContainer['response']->setStatus($this->appContainer['request']->headers->get('Example-Response-Code'));
+        } else {
+            $this->response = $methods->$method();
+        }
     }
 
-    private function getExampleBody()
+    private function getExampleResponseBody($responseCode = 200)
     {
         $responses = $this->route['method']->getResponses();
-        foreach ($responses as $response) {
-            try {
-                return $response->getBodyByType('application/json')->getExample();
-            } catch (Exception $e) {
-                
-            }
+        try {
+            return $responses[$responseCode]->getBodyByType('application/json')->getExample();
+        } catch (Exception $e) {
+            return null;
         }
     }
 
@@ -43,22 +47,5 @@ class Processor
     {
         return $this->response;
     }
-
-
-    // Begin API methods
-    private function correction ()
-    {
-        return $this->getExampleBody();
-    }
-
-    private function hello () 
-    {
-        $response = new stdClass();
-        $response->message = "hello";
-        $response->test = $request->params('test');
-        return json_encode($response);
-    }
-
-
 
 }
