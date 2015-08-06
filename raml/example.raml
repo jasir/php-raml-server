@@ -12,7 +12,7 @@ baseUri: https://api.github.com
         required: true
     responses:
       200:
-        description: Correction information to return
+        description: (OK) Correction information to return
         body:
           application/json:
             schema: |
@@ -61,17 +61,17 @@ baseUri: https://api.github.com
                 }
               }
       204:
-        description: No correction information available
+        description: (No Content) No correction information available
         body: null
   post:
-    description: Creates a new correction flow for a release, returns a `releaseCorrectionId`
+    description: CreatedCreates a new correction flow for a release, returns a `releaseCorrectionId`
     queryParameters:
       releaseId: 
         description: Primary id of the release for which we want to start a new correction
         example: 12345
     responses:
-      200:
-        description: New `releaseCorrection` created successfully
+      201:
+        description: (Created) New `releaseCorrection` created successfully
         body:
           application/json:
             schema: |
@@ -111,7 +111,7 @@ baseUri: https://api.github.com
 
             example: |
               {
-                "status": 200,
+                "status": 201,
                 "success": true,
                 "data": {
                   "release_correction_id": 1234,
@@ -132,8 +132,8 @@ baseUri: https://api.github.com
         description: New status of the `releaseCorrection`
         example: "submitted"
     responses:
-      200:
-        description: Requested `releaseCorrection` updated successfully
+      202:
+        description: (Accepted) Requested `releaseCorrection` updated successfully
         body:
           application/json:
             schema: |
@@ -170,12 +170,12 @@ baseUri: https://api.github.com
               }
             example: |
               {
-                "status": 200,
+                "status": 202,
                 "success": true,
                 "data": {
                   "release_correction_id": 1234,
                   "release_id": 678910,
-                  "status": "active",
+                  "status": "submitted",
                   "last_updated": "2011-08-24 06:09:02",
                   "last_updated_by": 12026,
                   "last_updated_type": "vendor"
@@ -193,6 +193,7 @@ baseUri: https://api.github.com
         required: true
     responses:
       200:
+        description: (OK) Correction detail fetch successful
         body:
           application/json:
             schema:  |
@@ -1280,8 +1281,8 @@ baseUri: https://api.github.com
                 "type": "object"
               }
     responses:
-      200:
-        description: Success, return the posted corrections in the body
+      202:
+        description: (Accepted) Success, return the posted corrections in the body
         body:
           application/json:
             example: |
@@ -1325,7 +1326,7 @@ baseUri: https://api.github.com
                     }
                 },
                 "success": true,
-                "status": 200
+                "status": 202
               }
 /hello:
   get:
