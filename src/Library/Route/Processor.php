@@ -1,8 +1,9 @@
 <?php
 
 require_once("Library/Route/Methods.php");
-require_once("Library/Exception/Route/MissingQueryParameterException.php");
 require_once("Library/Exception/Route/MissingBodyException.php");
+require_once("Library/Exception/Route/MissingHeaderException.php");
+require_once("Library/Exception/Route/MissingQueryParameterException.php");
 use Slim\Helper\Set;
 
 class Processor
@@ -46,10 +47,21 @@ class Processor
     private function validateRequest()
     {
 
+        foreach ($this->route['method']->getHeaders() as $namedParameter) {
+            if( $namedParameter->isRequired() ){
+                if (!in_array($namedParameter->getKey(), array_keys($this->appContainer['request']->headers->keys()))) {
+                    // var_dump($namedParameter); die();
+                    $message = array();
+                    $message['missing_header'][$namedParameter->getKey()] = $namedParameter->getDescription();
+                    throw new MissingHeaderException(json_encode($message));
+                }   
+            }
+        }
+
         foreach ($this->route['method']->getQueryParameters() as $namedParameter) {
             if( $namedParameter->isRequired() ){
                 if (!in_array($namedParameter->getKey(), array_keys($this->appContainer['request']->params()))) {
-                    // var_dump($namedParameter); die();
+                    
                     $message = array();
                     $message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingQueryParameterException(json_encode($message));
