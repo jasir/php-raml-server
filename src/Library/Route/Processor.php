@@ -30,8 +30,15 @@ class Processor
             $this->response = $this->getExampleResponseBody($this->appContainer['request']->headers->get('Example-Response-Code'));
             $appContainer['response']->setStatus($this->appContainer['request']->headers->get('Example-Response-Code'));
         } else {
-            $this->validateRequest();
-            $this->response = $methods->$method();
+            try {
+                $this->validateRequest();
+                $data = $methods->$method();
+            } catch (\Exception $e) {
+                // var_dump($e->getMessage()); die();
+                $this->appContainer['response']->setStatus(400);
+                $this->appContainer['response']->setBody($e->getMessage());
+            }
+            
         }
     }
 
@@ -40,12 +47,14 @@ class Processor
         foreach ($this->route['method']->getQueryParameters() as $namedParameter) {
             if( $namedParameter->isRequired() ){
                 if (!in_array($namedParameter->getKey(), array_keys($this->appContainer['request']->params()))) {
-                    throw new MissingQueryParameterException($namedParameter->getKey() . ": ". $namedParameter->getDescription());
+                    // var_dump($namedParameter); die();
+                    $message = array();
+                    $message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
+                    throw new MissingQueryParameterException(json_encode($message));
                 }   
             }
         }
 
-        $schema = null;
         try {
             $schema = $this->route['method']->getBodyByType('application/json')->getSchema();
         } catch (Exception $e) {
@@ -54,7 +63,9 @@ class Processor
         if(!is_null($schema)){
             if($schema->getJsonObject()->required) {
                 if ($this->appContainer['request']->getBody()=='') {
-                    throw new MissingBodyException($schema->__toString());
+                    $message = array();
+                    $message['missing_body']['schema'] = json_decode($schema->__toString());
+                    throw new MissingBodyException(json_encode($message));
                 }
             }    
         }
