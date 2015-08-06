@@ -43,8 +43,6 @@ $authenticate = function ($app) {
 
 foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
 
-    // var_dump(strtolower($route['method']->getType())); die();
-
     $type = strtolower($route['method']->getType());
     $app->$type("/" . $apiDef->getVersion() . $route['path'], $authenticate($app), function () use ($app, $route) {
         $routeProcessor = new Processor();
@@ -53,9 +51,6 @@ foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
         $app->response->setBody($response);
     });
 
-    // $class = new ReflectionClass('Route');
-    // $methods = $class->getMethods();
-    // var_dump($methods);
 }
 
 $app->run();
