@@ -713,62 +713,46 @@ baseUri: https://api.github.com
               }
             example: |
               {
-                data: {
-                  'release_id': 1234,
-                  'correction_id': 5678,
-                  'corrections': {
-                    'releases': {
-                      'release_name': {
-                        'correction': 'Fake release',
-                        'rejection_note': NULL
-                      },
-                      'primary': {
-                        'correction': [
-                          {
-                            artist_name: 'Test',
-                            role: 'primary'
-                          }
-                        ],
-                        'rejection_note': 'Ya goofed'
-                      }
+                "data": {
+                    "release_id": 1234,
+                    "correction_id": 5678,
+                    "corrections": {
+                        "releases": {
+                            "release_name": {
+                                "correction": "Fake release",
+                                "rejection_note": null
+                            },
+                            "primary": {
+                                "correction": [
+                                    {
+                                        "artist_name": "Test",
+                                        "role": "primary"
+                                    }
+                                ],
+                                "rejection_note": "Ya goofed"
+                            }
+                        },
+                        "track": {
+                            "1234565": {
+                                "original_file_name": {
+                                    "correction": "track_2.wav",
+                                    "rejection_note": null
+                                },
+                                "track_artist": {
+                                    "correction": [
+                                        {
+                                            "name": "Test",
+                                            "type": "performer"
+                                        }
+                                    ],
+                                    "rejection_note": "Ya goofed"
+                                }
+                            }
+                        }
                     }
-                  },
-                  'track': {
-                    1234565: {
-                      'track_name': {
-                        'correction': 'My Track',
-                        'rejection_note': NULL
-                      },
-                      'featuring': {
-                        'correction': [
-                          {
-                            artist_name: 'Test',
-                            role: 'primary'
-                          }
-                        ],
-                        'rejection_note': 'Ya goofed'
-                      }
-                    }
-                  },
-                    1234565: {
-                      'original_file_name': {
-                        'correction': 'track_2.wav',
-                        'rejection_note': NULL
-                      },
-                      'track_artist': {
-                        'correction': [
-                          {
-                            name: 'Test',
-                            type: 'performer'
-                          }
-                        ],
-                        'rejection_note': 'Ya goofed'
-                      }
-                    }
-                  },
                 },
-                'success': true,
-                'status': 200
+                "success": true,
+                "status": 200
               }
   post:
     description: Send a batch of error corrections to be used as the entire set of error corrections for a given release correction
@@ -1295,61 +1279,54 @@ baseUri: https://api.github.com
                 "required": true,
                 "type": "object"
               }
-        example: |
-          {
-            'release_id': 1234,
-            'correction_id': 5678,
-            'corrections': {
-              'releases': {
-                'release_name': {
-                  'correction': 'Fake release',
-                  'rejection_note': NULL
-                },
-                'primary': {
-                  'correction': [
-                    {
-                      artist_name: 'Test',
-                      role: 'primary'
+    responses:
+      200:
+        description: Success, return the posted corrections in the body
+        body:
+          application/json:
+            example: |
+              {
+                "data": {
+                    "release_id": 1234,
+                    "correction_id": 5678,
+                    "corrections": {
+                        "releases": {
+                            "release_name": {
+                                "correction": "Fake release",
+                                "rejection_note": null
+                            },
+                            "primary": {
+                                "correction": [
+                                    {
+                                        "artist_name": "Test",
+                                        "role": "primary"
+                                    }
+                                ],
+                                "rejection_note": "Ya goofed"
+                            }
+                        },
+                        "track": {
+                            "1234565": {
+                                "original_file_name": {
+                                    "correction": "track_2.wav",
+                                    "rejection_note": null
+                                },
+                                "track_artist": {
+                                    "correction": [
+                                        {
+                                            "name": "Test",
+                                            "type": "performer"
+                                        }
+                                    ],
+                                    "rejection_note": "Ya goofed"
+                                }
+                            }
+                        }
                     }
-                  ],
-                  'rejection_note': 'Ya goofed'
-                }
-              }
-            },
-            'track': {
-              1234565: {
-                'track_name': {
-                  'correction': 'My Track',
-                  'rejection_note': NULL
                 },
-                'featuring': {
-                  'correction': [
-                    {
-                      artist_name: 'Test',
-                      role: 'primary'
-                    }
-                  ],
-                  'rejection_note': 'Ya goofed'
-                }
+                "success": true,
+                "status": 200
               }
-            },
-              1234565: {
-                'original_file_name': {
-                  'correction': 'track_2.wav',
-                  'rejection_note': NULL
-                },
-                'track_artist': {
-                  'correction': [
-                    {
-                      name: 'Test',
-                      type: 'performer'
-                    }
-                  ],
-                  'rejection_note': 'Ya goofed'
-                }
-              }
-            },
-          }
 /hello:
   get:
     queryParameters:

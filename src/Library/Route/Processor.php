@@ -27,7 +27,9 @@ class Processor
         $methods = new Methods($appContainer, $route);
         // check if example response is requested
         if ($this->appContainer['request']->headers->get('Example-Response-Body')) {
-            $this->response = $this->getExampleResponseBody($this->appContainer['request']->headers->get('Example-Response-Code'));
+            $this->appContainer['response']->setBody(
+                $this->getExampleResponseBody($this->appContainer['request']->headers->get('Example-Response-Code'))
+            );
             $appContainer['response']->setStatus($this->appContainer['request']->headers->get('Example-Response-Code'));
         } else {
             try {
