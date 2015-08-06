@@ -9,6 +9,7 @@ baseUri: https://api.github.com
       releaseId: 
         description: Primary id of the `release` for which we want to retrieve a `releaseCorrection`
         example: 12345
+        required: true
     responses:
       200:
         description: Correction information to return
@@ -185,6 +186,7 @@ baseUri: https://api.github.com
       correction_id: 
         description: Id of the release_correction object we wish to get correction details for
         example: 12345434
+        required: true
     responses:
       200:
         body:
@@ -193,14 +195,6 @@ baseUri: https://api.github.com
               {
                 "$schema": "http://json-schema.org/draft-03/schema",
                 "properties": {
-                  "release_id": {
-                    "type": "int",
-                    "required": true
-                  },
-                  "correction_id": {
-                    "type": "int",
-                    "required": true
-                  },
                   "corrections  ": {
                     "type": "object",
                     "required": true,
@@ -776,57 +770,573 @@ baseUri: https://api.github.com
       correction_id: 
         description: Id of the release_correction object we wish to replace correction details for
         example: 12345434
-      corrections:
-        description: Payload for the new set of error correction details, formatted in the same schema as the GET response for this method
+        required: true
+    body:
+      application/json:
+        schema:   |
+              {
+                "$schema": "http://json-schema.org/draft-03/schema",
+                "properties": {
+                  "corrections  ": {
+                    "type": "object",
+                    "required": true,
+                    "properties": {
+                      "releases": {
+                        "type": "object",
+                        "required": false,
+                        "properties": {
+                            "coverart": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "boolean",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "c_line": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "description": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "featuring": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "genre_id": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "label": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "meta_language": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "performer": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "primary": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "release_amazon_pricing": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "release_artist": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "release_name": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "release_subgenre": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "remixer": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "array",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            },
+                            "vendor_release_identifier": {
+                              "type": "object",
+                              "required": false,
+                              "properties": {
+                                "correction": {
+                                  "type": "string",
+                                  "required": true
+                                },
+                                "rejection_note": {
+                                  "type": ["string", "null"],
+                                  "required": true
+                                }
+                              }
+                            }
+                        }
+                      },
+                      "tracks": {
+                        "type": "object",
+                        "required": false,
+                        "properties": {
+                          "explicit_lyrics": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "featuring": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "last_updated": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "length_minute": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "length_seconds": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "meta_language": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "original_file_name": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "performer": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "previewstarttime": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "p_line": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "remixer": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track_amazon_pricing": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track_artist": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track_itunes_pricing": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track_name": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track_publisher": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "track_writer": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "array",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "vendor_track_identifier": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          },
+                          "version": {
+                            "type": "object",
+                            "required": false,
+                            "properties": {
+                              "correction": {
+                                "type": "string",
+                                "required": true
+                              },
+                              "rejection_note": {
+                                "type": ["string", "null"],
+                                "required": true
+                              }
+                            }    
+                          }
+                        }
+                      }
+                    }
+                  }
+                },
+                "required": true,
+                "type": "object"
+              }
         example: |
           {
-            'corrections': {
-              'releases': {
-                'release_name': {
-                  'correction': 'Fake release',
-                  'rejection_note': NULL
+            "corrections": {
+              "releases": {
+                "release_name": {
+                  "correction": "Fake release",
+                  "rejection_note": null
                 },
-                'primary': {
-                  'correction': [
+                "primary": {
+                  "correction": [
                     {
-                      artist_name: 'Test',
-                      role: 'primary'
+                      "artist_name": "Test",
+                      "role": "primary"
                     }
                   ],
-                  'rejection_note': 'Ya goofed'
+                  "rejection_note": "Ya goofed"
                 }
               }
             },
-            'track': {
-              1234565: {
-                'track_name': {
-                  'correction': 'My Track',
-                  'rejection_note': NULL
+            "track": {
+              "1234565": {
+                "track_name": {
+                  "correction": "My Track",
+                  "rejection_note": null
                 },
-                'featuring': {
-                  'correction': [
+                "featuring": {
+                  "correction": [
                     {
-                      artist_name: 'Test',
-                      role: 'primary'
+                      "artist_name": "Test",
+                      "role": "primary"
                     }
                   ],
-                  'rejection_note': 'Ya goofed'
+                  "rejection_note": "Ya goofed"
                 }
-              }
-            },
-              1234565: {
-                'original_file_name': {
-                  'correction': 'track_2.wav',
-                  'rejection_note': NULL
+              },
+              "1234566": {
+                "original_file_name": {
+                  "correction": "track_2.wav",
+                  "rejection_note": null
                 },
-                'track_artist': {
-                  'correction': [
+                "track_artist": {
+                  "correction": [
                     {
-                      name: 'Test',
-                      type: 'performer'
+                      "name": "Test",
+                      "type": "performer"
                     }
                   ],
-                  'rejection_note': 'Ya goofed'
+                  "rejection_note": "Ya goofed"
                 }
               }
             }
@@ -851,10 +1361,4 @@ baseUri: https://api.github.com
   get:
     responses:
       200:
-        body: null
-
-/hello/goodbye/banana:
-  get:
-    responses:
-      200:
-        body: null  
+        body: null 
