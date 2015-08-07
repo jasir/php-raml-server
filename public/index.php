@@ -18,12 +18,6 @@ use Symfony\Component\Yaml\Yaml;
 require_once("Library/Route/Processor.php");
 require_once('Library/Route/Methods.php');
 
-// set response headers
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Methods: OPTIONS, GET, POST');
-header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
-header('Access-Control-Allow-Credentials: true');
-
 // Load configs and add to the app container
 $app = new \Slim\Slim();
 $configs = Yaml::parse(file_get_contents("../configs/configs.yml"));
@@ -31,6 +25,11 @@ $app->container->set('configs', $configs);
 
 // parse version from request uri
 $version = explode("/", ltrim($_SERVER['REQUEST_URI'], "/"))[0];
+if (!$version) {
+    header('Content-Type: text/markdown');
+    echo file_get_contents("../README.md");
+    die();
+}
 
 // parse configured RAML and add api definition to app container
 $parser = new \Raml\Parser();
