@@ -22,9 +22,13 @@ header('Access-Control-Allow-Methods: OPTIONS, GET, POST');
 header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept');
 header('Access-Control-Allow-Credentials: true');
 
+
+$version = explode("/", ltrim($_SERVER['REQUEST_URI'], "/"))[0];
+
+
 // read the RAML
 $parser = new \Raml\Parser();
-$apiDef = $parser->parseFromString("raml/example.raml", "/");
+$apiDef = $parser->parseFromString("raml/" . $version . "/" . "example.raml", "/");
 
 $app = new \Slim\Slim();
 
