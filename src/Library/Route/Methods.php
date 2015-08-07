@@ -1,49 +1,56 @@
 <?php
 
+/**
+ * Base class for handling HTTP requests method handling
+ *
+ */
 use Slim\Helper\Set;
 
-class Methods
+class MethodsBase
 {
 
-    private $appContainer;
+    /**
+     * Array of application configs from configs/configs.yml
+     * @var array
+     */
+    private $configs;
+    /**
+     * The parsed RAML definition for the route that we are processing
+     * @var array
+     */
     private $route;
+     /**
+     * The request object
+     * @var \Slim\Http\Request
+     */
+    private $request;
+    /**
+     * The response object
+     * @var \Slim\Http\Response
+     */
+    private $response;
 
+    /**
+     * @param Slim\Helper\Set
+     * @param array
+     */
     public function __construct(Set $appContainer, array $route)
     {
-        $this->appContainer = $appContainer;
         $this->route = $route;
+        $this->configs = $appContainer->get("configs");
+        $this->request = $appContainer->get("request");
+        $this->response = $appContainer->get("response");
     }
 
-    // Begin API methods
-    public function get_correction ()
-    {
-        $this->appContainer['response']->setStatus(501);
-    }
-
-    public function patch_correction ()
-    {
-        $this->appContainer['response']->setStatus(501);
-    }
-
-    public function post_correction ()
-    {
-        $this->appContainer['response']->setStatus(501);
-    }
-
-    public function get_correction_details ()
-    {
-        $this->appContainer['response']->setStatus(501);
-    }
-    public function post_correction_details ()
-    {
-        $this->appContainer['response']->setStatus(501);
-    }
-
-    public function get_hello () 
+    /**
+     * /hello?test={test}
+     * @return object
+     */
+    public function get_hello ()
     {
         $response = new stdClass();
         $response->message = "hello";
-        $response->test = $this->appContainer['request']->params('test');
+        $response->test = $this->request->params('test');
         return $response;
     }
 
