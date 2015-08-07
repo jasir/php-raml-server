@@ -13,22 +13,22 @@ class MethodsBase
      * Array of application configs from configs/configs.yml
      * @var array
      */
-    private $configs;
+    protected $configs;
     /**
      * The parsed RAML definition for the route that we are processing
      * @var array
      */
-    private $route;
+    protected $route;
      /**
      * The request object
      * @var \Slim\Http\Request
      */
-    private $request;
+    protected $request;
     /**
      * The response object
      * @var \Slim\Http\Response
      */
-    private $response;
+    protected $response;
 
     /**
      * @param Slim\Helper\Set
