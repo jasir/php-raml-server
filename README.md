@@ -9,7 +9,7 @@ The developer does the actual implementation of the specified API methods. Requi
 
 ##Requirements
 
-A web server running PHP 5.5+. You can follow [these instructions](aws_ec2_setup.md) to spin up a free Amazon EC2 with everything you need including a mysql persistence layer for the actual method implementations.
+A web server running PHP 5.5+. You can follow [these instructions](aws-ec2-howto.md) to spin up a free Amazon EC2 with everything you need including a mysql persistence layer for the actual method implementations.
 
 
 ##Setup
