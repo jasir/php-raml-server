@@ -27,11 +27,18 @@ class Processor
 
         $methods = new Methods($appContainer, $route);
         // check if example response is requested
-        if ($this->appContainer['request']->headers->get('Example-Response-Body')) {
-            $this->appContainer['response']->setBody(
-                $this->getExampleResponseBody($this->appContainer['request']->headers->get('Example-Response-Code'))
-            );
-            $appContainer['response']->setStatus($this->appContainer['request']->headers->get('Example-Response-Code'));
+        if ($this->appContainer['request']->headers->get('X-Http-Example') !== null) {
+            if ($this->appContainer['request']->headers->get('X-Http-Schema') == 1) {
+                $this->appContainer['response']->setBody(
+                    $this->getSchemaResponseBody($this->appContainer['request']->headers->get('X-Http-Example'))
+                );
+            } else {
+                $this->appContainer['response']->setBody(
+                    $this->getExampleResponseBody($this->appContainer['request']->headers->get('X-Http-Example'))
+                );
+            }
+
+            $appContainer['response']->setStatus($this->appContainer['request']->headers->get('X-Http-Example'));
         } else {
             try {
                 $this->validateRequest();
@@ -40,7 +47,7 @@ class Processor
                 $this->appContainer['response']->setStatus(400);
                 $this->appContainer['response']->setBody($e->getMessage());
             }
-            
+
         }
     }
 
@@ -50,22 +57,21 @@ class Processor
         foreach ($this->route['method']->getHeaders() as $namedParameter) {
             if( $namedParameter->isRequired() ){
                 if (!in_array($namedParameter->getKey(), array_keys($this->appContainer['request']->headers->keys()))) {
-                    // var_dump($namedParameter); die();
                     $message = array();
                     $message['missing_header'][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingHeaderException(json_encode($message));
-                }   
+                }
             }
         }
 
         foreach ($this->route['method']->getQueryParameters() as $namedParameter) {
             if( $namedParameter->isRequired() ){
                 if (!in_array($namedParameter->getKey(), array_keys($this->appContainer['request']->params()))) {
-                    
+
                     $message = array();
                     $message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingQueryParameterException(json_encode($message));
-                }   
+                }
             }
         }
 
@@ -83,9 +89,9 @@ class Processor
                     $message['missing_body']['schema'] = json_decode($schema->__toString());
                     throw new MissingBodyException(json_encode($message));
                 }
-            }    
+            }
         }
-        
+
     }
 
     private function getExampleResponseBody($responseCode = 200)
@@ -93,6 +99,16 @@ class Processor
         $responses = $this->route['method']->getResponses();
         try {
             return $responses[$responseCode]->getBodyByType('application/json')->getExample();
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
+    private function getSchemaResponseBody($responseCode = 200)
+    {
+        $responses = $this->route['method']->getResponses();
+        try {
+            return $responses[$responseCode]->getBodyByType('application/json')->getSchema();
         } catch (Exception $e) {
             return null;
         }

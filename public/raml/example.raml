@@ -18,7 +18,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
         description: Internal user impersonating another user
         example: 764
     queryParameters:
-      releaseId: 
+      release_id:
         description: Primary id of the `release` for which we want to retrieve a `releaseCorrection`
         example: 12345
         required: true
@@ -90,7 +90,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
         description: Internal user impersonating another user
         example: 764
     queryParameters:
-      releaseId: 
+      release_id:
         description: Primary id of the release for which we want to start a new correction
         example: 12345
     responses:
@@ -161,10 +161,10 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
         description: Internal user impersonating another user
         example: 764
     queryParameters:
-      releaseCorrectionId: 
+      releaseCorrectionId:
         description: Primary id of the `releaseCorrection` that we want to update
         example: 12345434
-      status: 
+      status:
         description: New status of the `releaseCorrection`
         example: "submitted"
     responses:
@@ -235,7 +235,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
         description: Internal user impersonating another user
         example: 764
     queryParameters:
-      correction_id: 
+      correction_id:
         description: Id of the release_correction object we wish to get correction details for
         example: 12345434
         required: true
@@ -484,7 +484,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "featuring": {
                             "type": "object",
@@ -498,7 +498,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "last_updated": {
                             "type": "object",
@@ -512,7 +512,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "length_minute": {
                             "type": "object",
@@ -526,7 +526,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "length_seconds": {
                             "type": "object",
@@ -540,7 +540,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "meta_language": {
                             "type": "object",
@@ -554,7 +554,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "original_file_name": {
                             "type": "object",
@@ -568,7 +568,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "performer": {
                             "type": "object",
@@ -582,7 +582,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "previewstarttime": {
                             "type": "object",
@@ -596,7 +596,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "p_line": {
                             "type": "object",
@@ -610,7 +610,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "remixer": {
                             "type": "object",
@@ -624,7 +624,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track": {
                             "type": "object",
@@ -638,7 +638,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_amazon_pricing": {
                             "type": "object",
@@ -652,7 +652,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_artist": {
                             "type": "object",
@@ -666,7 +666,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_itunes_pricing": {
                             "type": "object",
@@ -680,7 +680,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_name": {
                             "type": "object",
@@ -694,7 +694,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_publisher": {
                             "type": "object",
@@ -708,7 +708,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_writer": {
                             "type": "object",
@@ -722,7 +722,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "vendor_track_identifier": {
                             "type": "object",
@@ -736,7 +736,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "version": {
                             "type": "object",
@@ -750,7 +750,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           }
                         }
                       }
@@ -818,7 +818,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
         description: Internal user impersonating another user
         example: 764
     queryParameters:
-      correction_id: 
+      correction_id:
         description: Id of the release_correction object we wish to replace correction details for
         example: 12345434
         required: true
@@ -1064,7 +1064,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "featuring": {
                             "type": "object",
@@ -1078,7 +1078,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "last_updated": {
                             "type": "object",
@@ -1092,7 +1092,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "length_minute": {
                             "type": "object",
@@ -1106,7 +1106,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "length_seconds": {
                             "type": "object",
@@ -1120,7 +1120,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "meta_language": {
                             "type": "object",
@@ -1134,7 +1134,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "original_file_name": {
                             "type": "object",
@@ -1148,7 +1148,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "performer": {
                             "type": "object",
@@ -1162,7 +1162,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "previewstarttime": {
                             "type": "object",
@@ -1176,7 +1176,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "p_line": {
                             "type": "object",
@@ -1190,7 +1190,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "remixer": {
                             "type": "object",
@@ -1204,7 +1204,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track": {
                             "type": "object",
@@ -1218,7 +1218,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_amazon_pricing": {
                             "type": "object",
@@ -1232,7 +1232,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_artist": {
                             "type": "object",
@@ -1246,7 +1246,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_itunes_pricing": {
                             "type": "object",
@@ -1260,7 +1260,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_name": {
                             "type": "object",
@@ -1274,7 +1274,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_publisher": {
                             "type": "object",
@@ -1288,7 +1288,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "track_writer": {
                             "type": "object",
@@ -1302,7 +1302,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "vendor_track_identifier": {
                             "type": "object",
@@ -1316,7 +1316,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           },
                           "version": {
                             "type": "object",
@@ -1330,7 +1330,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
                                 "type": ["string", "null"],
                                 "required": true
                               }
-                            }    
+                            }
                           }
                         }
                       }
@@ -1412,4 +1412,4 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
   get:
     responses:
       200:
-        body: null 
+        body: null

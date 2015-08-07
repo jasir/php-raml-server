@@ -1,4 +1,5 @@
 <?php
+
 require '../vendor/autoload.php';
 
 ini_set('error_reporting', E_ALL);
@@ -23,7 +24,7 @@ header('Access-Control-Allow-Credentials: true');
 
 // read the RAML
 $parser = new \Raml\Parser();
-$apiDef = $parser->parseFromString("../raml/example.raml", "/");
+$apiDef = $parser->parseFromString("raml/example.raml", "/");
 
 $app = new \Slim\Slim();
 
