@@ -27,15 +27,10 @@ $apiDef = $parser->parseFromString("../raml/example.raml", "/");
 
 $app = new \Slim\Slim();
 
-/**
- * Authentication should be run as middleware before each route
- */
+// This is where a persistence layer ACL check would happen on authentication-related HTTP request items
 $authenticate = function ($app) {
     return function () use ($app) {
-        if ( 
-            !$app->request->headers->get('Vendor-Id')
-            || !$app->request->headers->get('User-Id')
-        ) {
+        if (false) {
             $app->halt(403, "Invalid security context");
         }
     };
