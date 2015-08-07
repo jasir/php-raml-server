@@ -14,6 +14,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
     get_include_path(),
 )));
 
+use Symfony\Component\Yaml\Yaml;
 require_once("Library/Route/Processor.php");
 
 // set response headers
@@ -23,14 +24,15 @@ header('Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Credentials: true');
 
 
+$app = new \Slim\Slim();
+$configs = Yaml::parse(file_get_contents("../configs/configs.yml"));
+$app->container->set('configs', $configs);
+
 $version = explode("/", ltrim($_SERVER['REQUEST_URI'], "/"))[0];
 
-
-// read the RAML
+// read the configured RAML
 $parser = new \Raml\Parser();
-$apiDef = $parser->parseFromString("raml/" . $version . "/" . "example.raml", "/");
-
-$app = new \Slim\Slim();
+$apiDef = $parser->parseFromString("raml/" . $version . "/" . $configs['raml_spec_filename'], "/");
 
 // This is where a persistence layer ACL check would happen on authentication-related HTTP request items
 $authenticate = function ($app) {

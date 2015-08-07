@@ -3,6 +3,7 @@
         "slim/slim": "~2.0",
         "slim/extras": "~2.0.0",
         "guzzlehttp/guzzle": "~6.0.0",
-        "alecsammon/php-raml-parser": "~1.1.0"
+        "alecsammon/php-raml-parser": "~1.1.0",
+        "symfony/yaml": "~2.7.0"
     }
 }
