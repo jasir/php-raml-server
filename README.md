@@ -91,7 +91,7 @@ Required query parameters, headers, and body schemas will be respected and `HTTP
 
 ####Fetching Response Examples and Schemas
 
-Two reserved headers exist for bypassing validation and just returning the examples and schemas defined in the RAML. Each response code 200, 201, 202 example and schema is requested one at a time.
+Two reserved HTTP headers exist for bypassing validation and just returning the examples and schemas defined in the RAML. Each response code 200, 201, 202 example and schema is requested one at a time.
 
 `X-Http-Example`: HTTP Status Code (200,201,202,...)
 
