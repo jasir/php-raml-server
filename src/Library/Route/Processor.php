@@ -51,7 +51,7 @@ class Processor
         $dirname = ltrim ($pathinfo["dirname"], "/");
         // Replace slashes with underscores and append basename
         $method = strtolower($route["type"]) . "_" . ($dirname ? str_replace("/", "_", $dirname) . "_" . $pathinfo["basename"] : $pathinfo["basename"]);
-        $method = str_replace("_", "", ucwords($method, "_"));
+        $method = lcfirst(str_replace("_", "", ucwords($method, "_")));
 
         // Invoke the class which containes the route method implementation from methods/{version}/{api_name}.php
         $methodsClassName = str_replace("_", "", ucwords($this->configs["api_name"], "_"));

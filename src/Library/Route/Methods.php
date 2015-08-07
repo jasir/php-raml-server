@@ -46,7 +46,7 @@ class MethodsBase
      * /hello?test={test}
      * @return object
      */
-    public function get_hello ()
+    public function getHello ()
     {
         $response = new stdClass();
         $response->message = "hello";

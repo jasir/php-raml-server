@@ -34,7 +34,6 @@ $version = explode("/", ltrim($_SERVER['REQUEST_URI'], "/"))[0];
 
 // parse configured RAML and add api definition to app container
 $parser = new \Raml\Parser();
-// echo "raml/" . $version . "/" . $configs['api_name'] . ".raml"; die();
 $apiDef = $parser->parseFromString("raml/" . $version . "/" . $configs['api_name'] . ".raml", "/");
 $app->container->set('apiDef', $apiDef);
 
@@ -47,10 +46,12 @@ $authenticate = function ($app) {
     };
 };
 
+// Loop through the routes and register the API endpoints with the app
 foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
 
     $type = strtolower($route['method']->getType());
     $app->$type("/" . $apiDef->getVersion() . $route['path'], $authenticate($app), function () use ($app, $route) {
+        // Process the route
         $routeProcessor = new Processor($app->container, $route);
         // API definitions are assumed to have this Content-Type for all content returned
         $app->response->headers->set('Content-Type', 'application/json');
