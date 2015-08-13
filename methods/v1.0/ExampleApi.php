@@ -3,6 +3,18 @@
 
 class ExampleApi extends MethodsBase
 {
+    /**
+     * A test endpoint
+     * /hello?test={test}
+     * @return object
+     */
+    public function getHello ()
+    {
+        $response = new stdClass();
+        $response->message = "hello";
+        $response->test = $this->request->params('test');
+        return $response;
+    }
 
     // Begin API methods
     public function getCorrection ()

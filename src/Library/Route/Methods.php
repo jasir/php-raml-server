@@ -42,18 +42,4 @@ class MethodsBase
         $this->response = $appContainer->get("response");
     }
 
-    /**
-     * /hello?test={test}
-     * @return object
-     */
-    public function getHello ()
-    {
-        $response = new stdClass();
-        $response->message = "hello";
-        $response->test = $this->request->params('test');
-        return $response;
-    }
-
-
-
 }
