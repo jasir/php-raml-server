@@ -99,8 +99,9 @@ class Processor
 
         // validate headers
         foreach ($this->route["method"]->getHeaders() as $namedParameter) {
-            if( $namedParameter->isRequired() ){
-                if (!in_array($namedParameter->getKey(), array_keys($this->request->headers->keys()))) {
+            
+            if( $namedParameter->isRequired()===true ){
+                if (!in_array($namedParameter->getKey(), $this->request->headers->keys())) {
                     $message = array();
                     $message["missing_header"][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingHeaderException(json_encode($message));
@@ -110,9 +111,8 @@ class Processor
 
         // validate query parameters
         foreach ($this->route["method"]->getQueryParameters() as $namedParameter) {
-            if( $namedParameter->isRequired() ){
+            if( $namedParameter->isRequired()===true ){
                 if (!in_array($namedParameter->getKey(), array_keys($this->request->params()))) {
-
                     $message = array();
                     $message["missing_parameter"][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingQueryParameterException(json_encode($message));

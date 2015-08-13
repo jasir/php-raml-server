@@ -93,6 +93,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
       release_id:
         description: Primary id of the release for which we want to start a new correction
         example: 12345
+        required: true
     responses:
       201:
         description: (Created) New `releaseCorrection` created successfully
@@ -164,6 +165,7 @@ baseUri: http://ows-rb-poc.rsatsangi.dc.devorch.com/v1.0
       releaseCorrectionId:
         description: Primary id of the `releaseCorrection` that we want to update
         example: 12345434
+        required: true
       status:
         description: New status of the `releaseCorrection`
         example: "submitted"
