@@ -1,7 +1,7 @@
 <?php
 
 
-class ExampleApi extends MethodsBase
+class ExampleApi extends Controller
 {
     /**
      * A test endpoint

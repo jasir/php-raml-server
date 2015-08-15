@@ -6,7 +6,7 @@
  */
 use Slim\Helper\Set;
 
-class MethodsBase
+class Controller
 {
 
     /**

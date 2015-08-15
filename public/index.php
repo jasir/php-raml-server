@@ -16,7 +16,7 @@ set_include_path(implode(PATH_SEPARATOR, array(
 
 use Symfony\Component\Yaml\Yaml;
 require_once("Library/Route/Processor.php");
-require_once('Library/Route/Methods.php');
+require_once('Library/Route/Controller.php');
 
 // Load configs and add to the app container
 $app = new \Slim\Slim();

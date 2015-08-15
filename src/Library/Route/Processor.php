@@ -3,7 +3,7 @@
  * Processor for handling HTTP requests to the API defined in the RAML
  *
  */
-require_once("Library/Route/Methods.php");
+require_once("Library/Route/Controller.php");
 require_once("Library/Exception/Route/MissingBodyException.php");
 require_once("Library/Exception/Route/MissingHeaderException.php");
 require_once("Library/Exception/Route/MissingQueryParameterException.php");
@@ -55,7 +55,7 @@ class Processor
 
         // Invoke the class which containes the route method implementation from methods/{version}/{api_name}.php
         $methodsClassName = str_replace("_", "", ucwords($this->configs["api_name"], "_"));
-        require_once("methods/" . $appContainer->get("apiDef")->getVersion() . "/" . $methodsClassName . ".php");
+        require_once("controllers/" . $appContainer->get("apiDef")->getVersion() . "/" . $methodsClassName . ".php");
         $methodsClass = new $methodsClassName($appContainer, $route);
 
         // Check first if example response is requested, we can bypass validation and just return
@@ -99,7 +99,7 @@ class Processor
 
         // validate headers
         foreach ($this->route["method"]->getHeaders() as $namedParameter) {
-            
+
             if( $namedParameter->isRequired()===true ){
                 if (!in_array($namedParameter->getKey(), $this->request->headers->keys())) {
                     $message = array();
