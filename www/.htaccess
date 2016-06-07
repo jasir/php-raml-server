@@ -1,4 +1,5 @@
 Header set Access-Control-Allow-Origin "*"
 RewriteEngine On
 RewriteCond %{REQUEST_FILENAME} !-f
+RewriteBase /
 RewriteRule ^ index.php [QSA,L]
