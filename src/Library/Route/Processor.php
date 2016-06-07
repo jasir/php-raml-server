@@ -54,25 +54,37 @@ class Processor
 		// the example response or response schema for a requested HTTP code
 		// For example, you want to see what an example 200 response would be for a route, this will be returned as defined in the RAML for this API
 
-		if ($this->request->headers->get("X-Http-Example") !== null) {
+		$implemented = method_exists($methodsClass, $method);
+
+
+		$httpExampleCode = $this->request->headers->get("X-Http-Example");
+
+		if ($httpExampleCode !== null || $implemented == false) {
+
+			$httpExampleCode = $httpExampleCode ?: 200;
+
+
 			// If the X-Http-Schema header is set to 1 then we return the response schema instead of the example
 			if ($this->request->headers->get("X-Http-Schema") == 1) {
+				$schemaContent = $this->getSchemaResponseBody($httpExampleCode);
 				$this->response->setBody(
-					$this->getSchemaResponseBody($this->request->headers->get("X-Http-Example"))
+					$schemaContent
 				);
 			} else {
+				$exampleContent = $this->getExampleResponseBody($httpExampleCode);
 				$this->response->setBody(
-					$this->getExampleResponseBody($this->request->headers->get("X-Http-Example"))
+					$exampleContent
 				);
 			}
 			// Set the status code of the response to the one the user wants to see
-			$appContainer['response']->setStatus($this->request->headers->get("X-Http-Example"));
+			$appContainer['response']->setStatus($httpExampleCode);
 		} else {
 			try {
 				// Validate the request
 				$this->validateRequest();
 				// Standardize the response format
 				$this->prepareResponse($methodsClass->$method());
+
 			} catch (\Exception $e) {
 				// If validation is not successful, then return 400 Bad Request
 				$this->response->setStatus(400);
