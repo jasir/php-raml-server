@@ -61,6 +61,7 @@ class Processor
         // Check first if example response is requested, we can bypass validation and just return
         // the example response or response schema for a requested HTTP code
         // For example, you want to see what an example 200 response would be for a route, this will be returned as defined in the RAML for this API
+
         if ($this->request->headers->get("X-Http-Example") !== null) {
             // If the X-Http-Schema header is set to 1 then we return the response schema instead of the example
             if ($this->request->headers->get("X-Http-Schema") == 1) {

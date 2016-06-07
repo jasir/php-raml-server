@@ -2,10 +2,9 @@
 
 require '../vendor/autoload.php';
 
-ini_set('error_reporting', E_ALL);
-ini_set('display_errors', 1);
+\Tracy\Debugger::enable();
+
 define("APPLICATION_PATH", __DIR__ . "/..");
-date_default_timezone_set('America/New_York');
 
 // Ensure src/ is on include_path
 set_include_path(implode(PATH_SEPARATOR, array(
