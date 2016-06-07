@@ -1,5 +1,5 @@
 <?php
 
-class MissingQueryParameterException extends Exception 
+class QueryParameterException extends Exception
 { 
 }

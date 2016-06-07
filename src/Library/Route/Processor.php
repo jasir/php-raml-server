@@ -3,10 +3,6 @@
  * Processor for handling HTTP requests to the API defined in the RAML
  *
  */
-require_once("Library/Route/Controller.php");
-require_once("Library/Exception/Route/MissingBodyException.php");
-require_once("Library/Exception/Route/MissingHeaderException.php");
-require_once("Library/Exception/Route/MissingQueryParameterException.php");
 use Slim\Helper\Set;
 
 
@@ -45,17 +41,11 @@ class Processor
         $this->response = $appContainer->get("response");
 
 
-        // Get the method name
-        $pathinfo = pathinfo ($this->route["path"]);
-        // Trim the leading slash
-        $dirname = ltrim ($pathinfo["dirname"], "/");
-        // Replace slashes with underscores and append basename
-        $method = strtolower($route["type"]) . "_" . ($dirname ? str_replace("/", "_", $dirname) . "_" . $pathinfo["basename"] : $pathinfo["basename"]);
-        $method = lcfirst(str_replace("_", "", ucwords($method, "_")));
+        $method = $this->generateMethodName($this->route['type'], $this->route['path']);
+
 
         // Invoke the class which containes the route method implementation from methods/{version}/{api_name}.php
         $methodsClassName = str_replace("_", "", ucwords($this->configs["api_name"], "_"));
-        require_once("controllers/" . $appContainer->get("apiDef")->getVersion() . "/" . $methodsClassName . ".php");
         $methodsClass = new $methodsClassName($appContainer, $route);
 
         // Check first if example response is requested, we can bypass validation and just return
@@ -189,6 +179,24 @@ class Processor
         $response = json_encode($response);
         $this->response->setBody($response);
         return $response;
+    }
+
+
+	/**
+     * @param $path
+     */
+    private function generateMethodName($type, $path)
+    {
+        // Get the method name
+        $pathinfo = pathinfo ($path);
+        // Trim the leading slash
+        $dirname = ltrim ($pathinfo["dirname"], "/");
+        $dirname = ltrim ($pathinfo["dirname"], "\\");
+
+        // Replace slashes with underscores and append basename
+        $method = strtolower($type) . "_" . ($dirname ? str_replace("/", "_", $dirname) . "_" . $pathinfo["basename"] : $pathinfo["basename"]);
+        $method = lcfirst(str_replace("_", "", ucwords($method, "_")));
+        return $method;
     }
 
 
