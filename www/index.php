@@ -44,7 +44,15 @@ if (!$version) {
 // parse configured RAML and add api definition to app container
 $parser = new \Raml\Parser();
 
-$apiDef = $parser->parseFromString("raml/" . $version . "/" . $configs['api_name'] . ".raml", __DIR__ . "/");
+$ramlDir = __DIR__ . "/raml/{$version}";
+$ramlPath = "/{$configs['api_name']}.raml";
+
+$source = file_get_contents($ramlDir . '/' . $ramlPath);
+
+
+$apiDef = $parser->parseFromString($source, $ramlDir);
+
+
 $app->container->set('apiDef', $apiDef);
 
 // This is where a persistence layer ACL check would happen on authentication-related HTTP request items
