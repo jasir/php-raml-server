@@ -19,7 +19,7 @@ class Processor
      * The parsed RAML definition for the route that we are processing
      * @var array
      */
-    private $route;
+    private $routeDefinition;
     /**
      * The request object
      * @var Request
@@ -37,15 +37,33 @@ class Processor
 
     /**
      * @param Set $appContainer
-     * @param array $route
+     * @param array $routeDefinition The parsed RAML definition for the route that we are processing
      */
-    public function __construct(Set $appContainer, array $route)
+    public function __construct(Set $appContainer, array $routeDefinition)
     {
-        $this->route = $route;
-        $this->configs = $appContainer->get("configs");
-        $this->request = $appContainer->get("request");
-        $this->response = $appContainer->get("response");
+        $this->routeDefinition = $routeDefinition;
+        $this->configs = $appContainer->get('configs');
+        $this->request = $appContainer->get('request');
+        $this->response = $appContainer->get('response');
         $this->appContainer = $appContainer;
+    }
+
+
+    public function process()
+    {
+        // Create controller class
+
+        $methodsClassName = $this->generateClassName($this->configs["api_name"]);
+        $methodName = $this->generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
+        $controller = new $methodsClassName($this->appContainer, $this->routeDefinition);
+
+        $requestedExample = $this->request->headers->get("X-Http-Example");
+
+        if ($requestedExample !== null || !method_exists($controller, $methodName)) {
+            $this->processInMockMode($requestedExample);
+        } else {
+            $this->processInNormalMode($methodName, $controller);
+        }
     }
 
 
@@ -60,7 +78,7 @@ class Processor
      * @param  jsonObject $data what you want to go back in the data part of the response
      * @return string the final content that was set to the response body
      */
-    public function prepareResponse($data)
+    protected function prepareResponse($data)
     {
         $response = new stdClass();
         $response->status = $this->response->getStatus();
@@ -72,57 +90,66 @@ class Processor
     }
 
 
-    public function process()
+    /**
+     * Processes request in mock mode, ie. returns exampla or schema
+     * @param $httpExampleCode
+     */
+    protected function processInMockMode($httpExampleCode)
     {
-        // Invoke the class which containes the route method implementation from methods/{version}/{api_name}.php
+        $httpExampleCode = $httpExampleCode ?: 200;
 
-        $methodsClassName = $this->generateClassName($this->configs["api_name"]);
-        $method = $this->generateMethodName($this->route['type'], $this->route['path']);
-
-        $methodsClass = new $methodsClassName($this->appContainer, $this->route);
-
-        // Check first if example response is requested, we can bypass validation and just return
-        // the example response or response schema for a requested HTTP code
-        // For example, you want to see what an example 200 response would be for a route, this will be returned as defined in the RAML for this API
-
-        $implemented = method_exists($methodsClass, $method);
-
-
-        $httpExampleCode = $this->request->headers->get("X-Http-Example");
-
-        if ($httpExampleCode !== null || $implemented == false) {
-
-            $httpExampleCode = $httpExampleCode ?: 200;
-
-
-            // If the X-Http-Schema header is set to 1 then we return the response schema instead of the example
-            if ($this->request->headers->get("X-Http-Schema") == 1) {
-                $schemaContent = $this->getSchemaResponseBody($httpExampleCode);
-                $this->response->setBody(
-                    $schemaContent
-                );
-            } else {
-                $exampleContent = $this->getExampleResponseBody($httpExampleCode);
-                $this->response->setBody(
-                    $exampleContent
-                );
-            }
-            // Set the status code of the response to the one the user wants to see
-            $this->appContainer['response']->setStatus($httpExampleCode);
+        if ($this->request->headers->get("X-Http-Schema") == 1) {
+            $this->sendSchema($httpExampleCode);
         } else {
-            try {
-                // Validate the request
-                $this->validateRequest();
-                // Standardize the response format
-                $this->prepareResponse($methodsClass->$method());
-
-            } catch (\Exception $e) {
-                // If validation is not successful, then return 400 Bad Request
-                $this->response->setStatus(400);
-                $this->response->setBody($e->getMessage());
-            }
-
+            $this->sendExample($httpExampleCode);
         }
+
+        // Set the status code of the response to the one the user wants to see
+        $this->appContainer['response']->setStatus($httpExampleCode);
+    }
+
+
+    /**
+     * @param $methodName
+     * @param $controller
+     */
+    protected function processInNormalMode($methodName, $controller)
+    {
+        try {
+            // Validate the request
+            $this->validateRequest();
+            // Standardize the response format
+            $this->prepareResponse($controller->$methodName());
+
+        } catch (\Exception $e) {
+            // If validation is not successful, then return 400 Bad Request
+            $this->response->setStatus(400);
+            $this->response->setBody($e->getMessage());
+        }
+    }
+
+
+    /**
+     * @param $httpExampleCode
+     */
+    protected function sendSchema($httpExampleCode)
+    {
+        $schemaContent = $this->getSchemaResponseBody($httpExampleCode);
+        $this->response->setBody(
+            $schemaContent
+        );
+    }
+
+
+    /**
+     * @param $httpExampleCode
+     */
+    protected function sendExample($httpExampleCode)
+    {
+        $exampleContent = $this->getExampleResponseBody($httpExampleCode);
+        $this->response->setBody(
+            $exampleContent
+        );
     }
 
 
@@ -145,7 +172,7 @@ class Processor
     {
 
         // validate headers
-        foreach ($this->route["method"]->getHeaders() as $namedParameter) {
+        foreach ($this->routeDefinition["method"]->getHeaders() as $namedParameter) {
 
             if ($namedParameter->isRequired() === true) {
                 if (!in_array($namedParameter->getKey(), $this->request->headers->keys())) {
@@ -157,7 +184,7 @@ class Processor
         }
 
         // validate query parameters
-        foreach ($this->route["method"]->getQueryParameters() as $namedParameter) {
+        foreach ($this->routeDefinition["method"]->getQueryParameters() as $namedParameter) {
             if ($namedParameter->isRequired() === true) {
                 if (!in_array($namedParameter->getKey(), array_keys($this->request->params()))) {
                     $message = array();
@@ -170,7 +197,7 @@ class Processor
         // validate body
         $schema = null;
         try {
-            $schema = $this->route["method"]->getBodyByType("application/json")->getSchema();
+            $schema = $this->routeDefinition["method"]->getBodyByType("application/json")->getSchema();
         } catch (Exception $e) {
         }
 
@@ -194,7 +221,7 @@ class Processor
      */
     private function getExampleResponseBody($responseCode = 200)
     {
-        $responses = $this->route["method"]->getResponses();
+        $responses = $this->routeDefinition["method"]->getResponses();
         try {
             return $responses[$responseCode]->getBodyByType("application/json")->getExample();
         } catch (Exception $e) {
@@ -209,7 +236,7 @@ class Processor
      */
     private function getSchemaResponseBody($responseCode = 200)
     {
-        $responses = $this->route["method"]->getResponses();
+        $responses = $this->routeDefinition["method"]->getResponses();
         try {
             return $responses[$responseCode]->getBodyByType("application/json")->getSchema();
         } catch (Exception $e) {
