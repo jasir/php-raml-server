@@ -4,8 +4,11 @@
         "slim/extras": "~2.0.0",
         "guzzlehttp/guzzle": "~6.0.0",
         "alecsammon/php-raml-parser": "~1.1.0",
-        "symfony/yaml": "~2.7.0",
         "tracy/tracy": "^2.3",
-        "nette/robot-loader": "^2.3"
+        "nette/robot-loader": "^2.3",
+	"symfony/yaml": "3.1 as v2.6"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.4"
     }
 }

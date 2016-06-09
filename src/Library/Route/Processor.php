@@ -3,18 +3,19 @@
  * Processor for handling HTTP requests to the API defined in the RAML
  *
  */
+ namespace RamlServer;
+
+use MissingBodyException;
+use MissingHeaderException;
+use MissingQueryParameterException;
 use Slim\Helper\Set;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
 
-class Processor
+final class Processor
 {
-    /**
-     * Array of application configs from configs/configs.yml
-     * @var array
-     */
-    private $configs;
+
     /**
      * The parsed RAML definition for the route that we are processing
      * @var array
@@ -33,19 +34,24 @@ class Processor
 
     /** @var Set */
     private $appContainer;
+    /**
+     * @var ZeroRouter
+     */
+    private $router;
 
 
     /**
+     * @param ZeroRouter $router
      * @param Set $appContainer
      * @param array $routeDefinition The parsed RAML definition for the route that we are processing
      */
-    public function __construct(Set $appContainer, array $routeDefinition)
+    public function __construct(ZeroRouter $router,  Set $appContainer, array $routeDefinition)
     {
         $this->routeDefinition = $routeDefinition;
-        $this->configs = $appContainer->get('configs');
         $this->request = $appContainer->get('request');
         $this->response = $appContainer->get('response');
         $this->appContainer = $appContainer;
+        $this->router = $router;
     }
 
 
@@ -53,13 +59,14 @@ class Processor
     {
         // Create controller class
 
-        $methodsClassName = $this->generateClassName($this->configs["api_name"]);
+        $controllerClassName = $this->generateClassName($this->router->getApiName());
         $methodName = $this->generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
-        $controller = new $methodsClassName($this->appContainer, $this->routeDefinition);
+
+        $controller = class_exists($controllerClassName) ? $controllerClassName($this->appContainer, $this->routeDefinition) : null;
 
         $requestedExample = $this->request->headers->get("X-Http-Example");
 
-        if ($requestedExample !== null || !method_exists($controller, $methodName)) {
+        if ($requestedExample !== null || !method_exists($controller, $methodName || $controller === null)) {
             $this->processInMockMode($requestedExample);
         } else {
             $this->processInNormalMode($methodName, $controller);
@@ -78,9 +85,9 @@ class Processor
      * @param  jsonObject $data what you want to go back in the data part of the response
      * @return string the final content that was set to the response body
      */
-    protected function prepareResponse($data)
+    private function prepareResponse($data)
     {
-        $response = new stdClass();
+        $response = new \stdClass();
         $response->status = $this->response->getStatus();
         $response->success = $this->response->isOk();
         $response->data = $data;
@@ -94,7 +101,7 @@ class Processor
      * Processes request in mock mode, ie. returns exampla or schema
      * @param $httpExampleCode
      */
-    protected function processInMockMode($httpExampleCode)
+    private function processInMockMode($httpExampleCode)
     {
         $httpExampleCode = $httpExampleCode ?: 200;
 
@@ -113,7 +120,7 @@ class Processor
      * @param $methodName
      * @param $controller
      */
-    protected function processInNormalMode($methodName, $controller)
+    private function processInNormalMode($methodName, $controller)
     {
         try {
             // Validate the request
@@ -132,7 +139,7 @@ class Processor
     /**
      * @param $httpExampleCode
      */
-    protected function sendSchema($httpExampleCode)
+    private function sendSchema($httpExampleCode)
     {
         $schemaContent = $this->getSchemaResponseBody($httpExampleCode);
         $this->response->setBody(
@@ -144,7 +151,7 @@ class Processor
     /**
      * @param $httpExampleCode
      */
-    protected function sendExample($httpExampleCode)
+    private function sendExample($httpExampleCode)
     {
         $exampleContent = $this->getExampleResponseBody($httpExampleCode);
         $this->response->setBody(

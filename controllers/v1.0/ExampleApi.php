@@ -20,6 +20,9 @@ class ExampleApi extends Controller
     public function getCorrection ()
     {
         $this->response->setStatus(501);
+        $response = new stdClass();
+        $response->message = 'Not implemented';
+        return $response;
     }
 
     public function patchCorrection ()
