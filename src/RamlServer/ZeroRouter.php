@@ -31,7 +31,7 @@ class ZeroRouter
     private $apiUri;
 
     /** @var bool */
-    private $isApi;
+    private $isApi = null;
 
     /** @var string */
     private $apiName;
@@ -53,22 +53,38 @@ class ZeroRouter
         $this->options = $options;
         $this->uri = $uri;
         $this->apiUri = $this->getOption('server') . '/' . $this->getApiUriPart();
-        $this->isApi = false;
+    }
 
-        if (strpos($uri, $this->apiUri) !== 0) {
-            return;
+
+    /**
+     * @return bool
+     */
+    public function isApiRequest()
+    {
+        if ($this->isApi === null) {
+
+            $this->isApi = false;
+
+            if (strpos($this->uri, $this->apiUri) === 0) {
+
+                $part = substr($this->uri, strlen($this->apiUri) + 1);
+                $parts = explode('/', $part);
+
+                //at least api-name and version must be part of url
+                if (!(count($parts) < 2 || empty($parts[0]) || empty($parts[1]))) {
+                    list($this->apiName, $this->version) = $parts;
+                    $this->isApi = true;
+                }
+
+            }
         }
 
-        $part = substr($uri, strlen($this->apiUri) + 1);
-        $parts = explode('/', $part);
+        return $this->isApi;
+    }
 
-        //at least api-name and version must be part of url
-        if (count($parts) < 2 || empty($parts[0]) || empty($parts[1])) {
-            return;
-        }
 
-        list($this->apiName, $this->version) = $parts;
-        $this->isApi = true;
+    public function isRamlRequest()
+    {
 
     }
 
@@ -125,7 +141,7 @@ class ZeroRouter
             //get,post,...
             $app->$httpMethod(
 
-                //route path
+            //route path
                 '/' . $apiStarts . '/' . $apiDef->getVersion() . $route['path'],
 
                 //authenticate middleware
@@ -146,15 +162,6 @@ class ZeroRouter
         }
 
         $app->run();
-    }
-
-
-    /**
-     * @return bool
-     */
-    public function isApiRoute()
-    {
-        return $this->isApi;
     }
 
 
@@ -183,15 +190,6 @@ class ZeroRouter
     public function getApiUriPart()
     {
         return $this->getOption('apiUriPart');
-    }
-
-
-    /**
-     * @return string
-     */
-    protected function getApiDirectory()
-    {
-        return $this->getRamlRootDirectory() . '/' . $this->getApiName() . '/' . $this->getVersion();
     }
 
 
@@ -228,7 +226,8 @@ class ZeroRouter
      * @param null $default
      * @return mixed|null
      */
-    public function getOption($optionName, $default = null) {
+    public function getOption($optionName, $default = null)
+    {
         if (array_key_exists($optionName, $this->options)) {
             return $this->options[$optionName];
         }
@@ -238,6 +237,15 @@ class ZeroRouter
             );
         }
         return $default;
+    }
+
+
+    /**
+     * @return string
+     */
+    protected function getApiDirectory()
+    {
+        return $this->getRamlRootDirectory() . '/' . $this->getApiName() . '/' . $this->getVersion();
     }
 
 

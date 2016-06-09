@@ -29,7 +29,7 @@ $router = new \RamlServer\ZeroRouter($options, $uri);
 
 //if not api url, serve some other content - typically, nette router gets in now
 
-if ($router->isApiRoute()) {
+if ($router->isApiRequest()) {
     $router->run();
     exit();
 }
