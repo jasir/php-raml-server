@@ -33,6 +33,9 @@ class ZeroRouter
     /** @var bool */
     private $isApi = null;
 
+    /** @var bool */
+    private $isRaml = null;
+
     /** @var string */
     private $apiName;
 
@@ -41,6 +44,9 @@ class ZeroRouter
 
     /** @var array */
     private $options;
+
+    /** @var  string */
+    private $ramlFile;
 
 
     /**
@@ -52,7 +58,9 @@ class ZeroRouter
     {
         $this->options = $options;
         $this->uri = $uri;
-        $this->apiUri = $this->getOption('server') . '/' . $this->getApiUriPart();
+        $this->apiUri = $this->getOption('server') . '/' . $this->getOption('apiUriPart');
+        $this->ramlUri = $this->getOption('server') . '/' . $this->getOption('ramlUriPart');
+        $this->prepare();
     }
 
 
@@ -61,35 +69,20 @@ class ZeroRouter
      */
     public function isApiRequest()
     {
-        if ($this->isApi === null) {
-
-            $this->isApi = false;
-
-            if (strpos($this->uri, $this->apiUri) === 0) {
-
-                $part = substr($this->uri, strlen($this->apiUri) + 1);
-                $parts = explode('/', $part);
-
-                //at least api-name and version must be part of url
-                if (!(count($parts) < 2 || empty($parts[0]) || empty($parts[1]))) {
-                    list($this->apiName, $this->version) = $parts;
-                    $this->isApi = true;
-                }
-
-            }
-        }
-
         return $this->isApi;
     }
 
 
+    /**
+     * @return bool
+     */
     public function isRamlRequest()
     {
-
+        return $this->isRaml;
     }
 
 
-    public function run()
+    public function serveApi()
     {
 
         // Load configs and add to the app container
@@ -112,7 +105,6 @@ class ZeroRouter
 
 
         $ramlIndexPath = $this->getApiIndexFile();
-
         $source = file_get_contents($ramlIndexPath);
 
         $parser = new Parser();
@@ -131,7 +123,7 @@ class ZeroRouter
 
         // Loop through the routes and register the API endpoints with the app
 
-        $apiStarts = $this->getApiUriPart() . '/' . $this->getApiName();
+        $apiStarts = $this->getOption('apiUriPart') . '/' . $this->getApiName();
 
         foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
 
@@ -165,6 +157,25 @@ class ZeroRouter
     }
 
 
+    public function serveRamlFiles()
+    {
+        header('Content-Type: text/raml');
+        $localPath = $this->getRamlRootDirectory()
+            . '/' . $this->getApiName()
+            . '/' . $this->getVersion()
+            . '/' . $this->getRequestedRamlFile();
+
+        if ($this->getRequestedRamlFile() === 'index.raml') {
+            $content = file_get_contents($localPath);
+            $server = $this->getApiUrl();
+            $result = preg_replace('/^(baseUri:)\s*(.+)$/m', "\$1 ${server}", $content);
+            echo $result;
+        } else {
+            readfile($localPath);
+        }
+    }
+
+
     /**
      * <http://...server>/<apiUriPath>/<apiName>/users
      * @return string|null
@@ -181,15 +192,6 @@ class ZeroRouter
     public function getVersion()
     {
         return $this->version;
-    }
-
-
-    /**
-     * @see getApiName
-     */
-    public function getApiUriPart()
-    {
-        return $this->getOption('apiUriPart');
     }
 
 
@@ -243,9 +245,54 @@ class ZeroRouter
     /**
      * @return string
      */
+    public function getRequestedRamlFile()
+    {
+        return $this->ramlFile;
+    }
+
+
+    /**
+     * @return string
+     */
     protected function getApiDirectory()
     {
         return $this->getRamlRootDirectory() . '/' . $this->getApiName() . '/' . $this->getVersion();
+    }
+
+
+    private function prepare()
+    {
+        $this->isApi = false;
+        $this->isRaml = false;
+
+        if (strpos($this->uri, $this->apiUri) === 0) {
+            $part = substr($this->uri, strlen($this->apiUri) + 1);
+            $parts = explode('/', $part);
+
+            if ((count($parts) >= 2) && (!empty($parts[0])) && (!empty($parts[1]))) {
+                list($this->apiName, $this->version) = $parts;
+                $this->isApi = true;
+            }
+        } elseif (strpos($this->uri, $this->ramlUri) === 0) {
+            $part = substr($this->uri, strlen($this->ramlUri) + 1);
+            $parts = explode('/', $part, 3);
+
+            //at least api-name and version must be part of url
+            if ((count($parts) >= 3) && (!empty($parts[0])) && (!empty($parts[1]))) {
+                list($this->apiName, $this->version, $this->ramlFile) = $parts;
+                $this->isRaml = true;
+            }
+        }
+    }
+
+
+    private function getApiUrl()
+    {
+        return
+            $this->getOption('server')
+            . '/' . $this->getOption('apiUriPart')
+            . '/' . $this->getApiName()
+            . '/' . $this->getVersion();
     }
 
 

@@ -12,7 +12,8 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
         $options = [
             'server' => 'www.api.com',
             'apiUriPart' => 'api',
-            'ramlDir' => '/path/to/raml'
+            'ramlDir' => '/path/to/raml',
+            'ramlUriPart' => 'raml',
         ];
 
         $router = new ZeroRouter(
@@ -22,7 +23,6 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
 
         $this->assertTrue($router->isApiRequest());
 
-        $this->assertEquals('api', $router->getApiUriPart());
         $this->assertEquals('some-api-here', $router->getApiName());
         $this->assertEquals('v1.0', $router->getVersion());
         $this->assertEquals('/path/to/raml', $router->getRamlRootDirectory());
@@ -36,7 +36,8 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
         $options = [
             'server' => 'www.api.com',
             'apiUriPart' => 'api',
-            'ramlDir' => '/path/to/raml'
+            'ramlDir' => '/path/to/raml',
+            'ramlUriPart' => 'raml',
         ];
 
         $router = new ZeroRouter(
@@ -48,12 +49,37 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
     }
 
 
+    public function test_isRamlRequest()
+    {
+        $options = [
+            'server' => 'www.api.com',
+            'apiUriPart' => 'api',
+            'ramlUriPart' => 'raml',
+            'ramlDir' => '/path/to/raml'
+        ];
+
+        $router = new ZeroRouter(
+            $options,
+            'www.api.com/raml/some-api-here/v1.0/index.raml'
+        );
+
+        $this->assertFalse($router->isApiRequest());
+        $this->assertTrue($router->isRamlRequest());
+        $this->assertEquals('some-api-here', $router->getApiName());
+        $this->assertEquals('v1.0', $router->getVersion());
+        $this->assertEquals('/path/to/raml/some-api-here/v1.0/index.raml', $router->getApiIndexFile());
+        $this->assertEquals('index.raml', $router->getRequestedRamlFile());
+
+    }
+
+
     public function test_getOption()
     {
         $options = [
             'server' => 'www.api.com',
             'apiUriPart' => 'api',
-            'ramlDir' => '/path/to/raml'
+            'ramlDir' => '/path/to/raml',
+            'ramlUriPart' => 'raml'
         ];
 
         $router = new ZeroRouter(
