@@ -1,7 +1,10 @@
 <?php
 
+namespace App\Api;
 
-class ExampleApi extends Controller
+use RamlServer\Controller;
+
+class Server extends Controller
 {
     /**
      * A test endpoint
@@ -10,7 +13,7 @@ class ExampleApi extends Controller
      */
     public function getHello ()
     {
-        $response = new stdClass();
+        $response = new \stdClass();
         $response->message = "hello";
         $response->test = $this->request->params('test');
         return $response;
@@ -20,7 +23,7 @@ class ExampleApi extends Controller
     public function getCorrection ()
     {
         $this->response->setStatus(501);
-        $response = new stdClass();
+        $response = new \stdClass();
         $response->message = 'Not implemented';
         return $response;
     }

@@ -4,6 +4,8 @@
  * Base class for handling HTTP requests method handling
  *
  */
+namespace RamlServer;
+
 use Slim\Helper\Set;
 
 abstract class Controller
@@ -19,7 +21,7 @@ abstract class Controller
      * @var array
      */
     protected $route;
-     /**
+    /**
      * The request object
      * @var \Slim\Http\Request
      */
@@ -29,6 +31,7 @@ abstract class Controller
      * @var \Slim\Http\Response
      */
     protected $response;
+
 
     /**
      * @param Slim\Helper\Set
