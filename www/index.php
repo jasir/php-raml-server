@@ -21,7 +21,8 @@ $uri = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'].$_SERVER['REQU
 $options = [
     'server' => 'http://raml-server.127.0.0.1.xip.io',
     'apiUriPart' => 'api',
-    'ramlDir' => APPLICATION_PATH . '/www/raml',
+    'ramlDir' => APPLICATION_PATH . '/raml',
+    'ramlUriPart' => 'raml',
     'controllerNameSpace' => 'App\\Api'
 ];
 
@@ -30,7 +31,14 @@ $router = new \RamlServer\ZeroRouter($options, $uri);
 //if not api url, serve some other content - typically, nette router gets in now
 
 if ($router->isApiRequest()) {
-    $router->run();
+    $router->serveApi();
+    exit();
+}
+
+//or serve the raml files
+
+if ($router->isRamlRequest()) {
+    $router->serveRamlFiles();
     exit();
 }
 
