@@ -2,6 +2,7 @@
 
 namespace RamlServer;
 
+use InvalidArgumentException;
 use Raml\Parser;
 use Slim\Slim;
 use Symfony\Component\Yaml\Yaml;
@@ -51,7 +52,7 @@ class ZeroRouter
     {
         $this->options = $options;
         $this->uri = $uri;
-        $this->apiUri = $options['server'] . '/' . $this->getApiUriPart();
+        $this->apiUri = $this->getOption('server') . '/' . $this->getApiUriPart();
         $this->isApi = false;
 
         if (strpos($uri, $this->apiUri) !== 0) {
@@ -181,7 +182,7 @@ class ZeroRouter
      */
     public function getApiUriPart()
     {
-        return $this->options['apiUriPart'];
+        return $this->getOption('apiUriPart');
     }
 
 
@@ -209,7 +210,34 @@ class ZeroRouter
      */
     public function getRamlRootDirectory()
     {
-        return $this->options['ramlDir'];
+        return $this->getOption('ramlDir');
+    }
+
+
+    /**
+     * @return mixed|null
+     */
+    public function getControllerNamespace()
+    {
+        return $this->getOption('controllerNamespace');
+    }
+
+
+    /**
+     * @param $optionName
+     * @param null $default
+     * @return mixed|null
+     */
+    public function getOption($optionName, $default = null) {
+        if (array_key_exists($optionName, $this->options)) {
+            return $this->options[$optionName];
+        }
+        if (func_num_args() === 1) {
+            throw new InvalidArgumentException(
+                "RamlServer: Invalid configuration, key `$optionName` is missing"
+            );
+        }
+        return $default;
     }
 
 

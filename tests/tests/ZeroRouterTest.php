@@ -45,7 +45,33 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
         );
 
         $this->assertFalse($router->isApiRoute());
+    }
 
+
+    public function test_getOption()
+    {
+        $options = [
+            'server' => 'www.api.com',
+            'apiUriPart' => 'api',
+            'ramlDir' => '/path/to/raml'
+        ];
+
+        $router = new ZeroRouter(
+            $options,
+            'www.api.com/api/some-api-here/v1.0/users/logged/?q=1'
+        );
+
+        $this->assertEquals('www.api.com', $router->getOption('server'));
+        $this->assertEquals('default', $router->getOption('none', 'default'));
+
+        try {
+            $router->getOption('none');
+        } catch (\InvalidArgumentException $e) {
+            $this->assertInstanceOf(\InvalidArgumentException::class, $e);
+            $catch = true;
+        }
+
+        $this->assertTrue($catch);
 
     }
 
