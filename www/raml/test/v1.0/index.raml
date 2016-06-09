@@ -1,0 +1,19 @@
+#%RAML 0.8
+title: Release Service
+version: v1.0
+mediaType:  application/json
+baseUri: http://raml-server.127.0.0.1.xip.io/v1.0
+
+/hello:
+  get:
+    queryParameters:
+      test:
+        description: Any value you put here will be returned. This enpoint serves as a heartbeat monitor.
+        example: "test123"
+    responses:
+      200:
+        description: Testing the service
+        body:
+          application/json:
+            example: !include hello.sample
+
