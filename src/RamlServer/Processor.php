@@ -3,11 +3,8 @@
  * Processor for handling HTTP requests to the API defined in the RAML
  *
  */
- namespace RamlServer;
+namespace RamlServer;
 
-use MissingBodyException;
-use MissingHeaderException;
-use MissingQueryParameterException;
 use Slim\Helper\Set;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -45,7 +42,7 @@ final class Processor
      * @param Set $appContainer
      * @param array $routeDefinition The parsed RAML definition for the route that we are processing
      */
-    public function __construct(ZeroRouter $router,  Set $appContainer, array $routeDefinition)
+    public function __construct(ZeroRouter $router, Set $appContainer, array $routeDefinition)
     {
         $this->routeDefinition = $routeDefinition;
         $this->request = $appContainer->get('request');
@@ -60,13 +57,16 @@ final class Processor
         // Create controller class
 
         $controllerClassName = $this->generateClassName($this->router->getApiName());
+
         $methodName = $this->generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
 
-        $controller = class_exists($controllerClassName) ? $controllerClassName($this->appContainer, $this->routeDefinition) : null;
+        $controller = class_exists($controllerClassName)
+            ? new $controllerClassName($this->appContainer, $this->routeDefinition)
+            : null;
 
         $requestedExample = $this->request->headers->get("X-Http-Example");
 
-        if ($requestedExample !== null || !method_exists($controller, $methodName || $controller === null)) {
+        if ($requestedExample !== null || !method_exists($controller, $methodName) || $controller === null) {
             $this->processInMockMode($requestedExample);
         } else {
             $this->processInNormalMode($methodName, $controller);
@@ -161,16 +161,6 @@ final class Processor
 
 
     /**
-     * @param $apiName
-     * @return mixed
-     */
-    private function generateClassName($apiName)
-    {
-        return str_replace("_", "", ucwords($apiName, "_"));
-    }
-
-
-    /**
      * Run validation on headers, query parameters, and body against the route definition,
      * verifying that required items exist. It returns nothing, but throws Exceptions if
      * a validation does not pass
@@ -201,11 +191,13 @@ final class Processor
             }
         }
 
+
+
         // validate body
         $schema = null;
         try {
             $schema = $this->routeDefinition["method"]->getBodyByType("application/json")->getSchema();
-        } catch (Exception $e) {
+        } catch (\Exception $e) {
         }
 
         if (!is_null($schema)) {
@@ -253,6 +245,23 @@ final class Processor
 
 
     /**
+     * @param $apiName
+     * @return mixed
+     */
+    private function generateClassName($apiName)
+    {
+        $namespace = $this->router->getOption('controllerNameSpace', null);
+        $className = str_replace("_", "", ucwords($apiName, "_"));
+        if ($namespace) {
+            return $namespace . '\\' . $className;
+        } else {
+            return $className;
+        }
+    }
+
+
+    /**
+     * ie. getSomething
      * @param $type
      * @param $path
      * @return string
