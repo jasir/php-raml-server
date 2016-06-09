@@ -20,7 +20,7 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
             'www.api.com/api/some-api-here/v1.0/users/logged/?q=1'
         );
 
-        $this->assertTrue($router->isApiRoute());
+        $this->assertTrue($router->isApiRequest());
 
         $this->assertEquals('api', $router->getApiUriPart());
         $this->assertEquals('some-api-here', $router->getApiName());
@@ -44,7 +44,7 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
             'www.api.com/cms/neco/clanek'
         );
 
-        $this->assertFalse($router->isApiRoute());
+        $this->assertFalse($router->isApiRequest());
     }
 
 
