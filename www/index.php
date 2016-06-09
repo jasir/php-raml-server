@@ -22,6 +22,7 @@ $options = [
     'server' => 'http://raml-server.127.0.0.1.xip.io',
     'apiUriPart' => 'api',
     'ramlDir' => APPLICATION_PATH . '/www/raml',
+    'controllerNameSpace' => 'App\\Api'
 ];
 
 $router = new \RamlServer\ZeroRouter($options, $uri);
