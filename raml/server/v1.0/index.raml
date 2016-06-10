@@ -28,7 +28,7 @@ baseUri: http://raml-server.127.0.0.1.xip.io/v1.0
         body:
           application/json:
             schema: !include ./correction.schema
-            example: !include ./fucked.sample
+            example: !include ./correction.sample
       204:
         description: (No Content) No correction information available
         body: null
@@ -93,7 +93,7 @@ baseUri: http://raml-server.127.0.0.1.xip.io/v1.0
         description: New status of the `releaseCorrection`
         example: "submitted"
     responses:
-      202:
+      200:
         description: (Accepted) Requested `releaseCorrection` updated successfully
         body:
           application/json:
@@ -131,7 +131,7 @@ baseUri: http://raml-server.127.0.0.1.xip.io/v1.0
               }
             example: |
               {
-                "status": 202,
+                "status": 200,
                 "success": true,
                 "data": {
                   "release_correction_id": 1234,
