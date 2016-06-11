@@ -176,10 +176,8 @@ class ZeroRouter
 			. '/' . $this->getRequestedRamlFile();
 
 		if ($this->getRequestedRamlFile() === 'index.raml') {
-			$content = file_get_contents($localPath);
-			$server = $this->getApiUrl();
-			$result = preg_replace('/^(baseUri:)\s*(.+)$/m', "\$1 ${server}", $content);
-			echo $result;
+			$apiUrl = $this->getApiUrl();
+			echo preg_replace('/^(baseUri:)\s*(.+)$/m', "\$1 ${apiUrl}", file_get_contents($localPath));
 		} else {
 			readfile($localPath);
 		}
