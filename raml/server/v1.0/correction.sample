@@ -1,0 +1,13 @@
+{
+  "status": 200,
+  "success": true,
+  "data": {
+    "release_correction_id": 1234,
+    "release_id": 678910,
+    "status": "active",
+    "last_updated": "2011-08-24 06:09:02",
+    "last_updated_by": 12026,
+    "last_updated_type": "vendor"
+  }
+}
+  
