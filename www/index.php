@@ -26,7 +26,13 @@ $options = [
     'controllerNameSpace' => 'App\\Api'
 ];
 
+// cache
+
+$fileStorage = new \Nette\Caching\Storages\FileStorage(APPLICATION_PATH . '/temp');
+$cache = new \Nette\Caching\Cache($fileStorage);
+
 $router = new \RamlServer\ZeroRouter($options, $uri);
+$router->setCache($cache);
 
 //if not api url, serve some other content - typically, nette router gets in now
 
