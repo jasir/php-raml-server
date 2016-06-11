@@ -5,6 +5,7 @@
  */
 namespace RamlServer;
 
+use Exception;
 use Slim\Helper\Set;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -172,9 +173,9 @@ final class Processor
         foreach ($this->routeDefinition["method"]->getHeaders() as $namedParameter) {
 
             if ($namedParameter->isRequired() === true) {
-                if (!in_array($namedParameter->getKey(), $this->request->headers->keys())) {
+                if (!in_array($namedParameter->getKey(), $this->request->headers->keys(), true)) {
                     $message = array();
-                    $message["missing_header"][$namedParameter->getKey()] = $namedParameter->getDescription();
+                    $message['missing_header'][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingHeaderException(json_encode($message));
                 }
             }
@@ -183,15 +184,13 @@ final class Processor
         // validate query parameters
         foreach ($this->routeDefinition["method"]->getQueryParameters() as $namedParameter) {
             if ($namedParameter->isRequired() === true) {
-                if (!in_array($namedParameter->getKey(), array_keys($this->request->params()))) {
+                if (!in_array($namedParameter->getKey(), array_keys($this->request->params()), true)) {
                     $message = array();
-                    $message["missing_parameter"][$namedParameter->getKey()] = $namedParameter->getDescription();
+                    $message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
                     throw new MissingQueryParameterException(json_encode($message));
                 }
             }
         }
-
-
 
         // validate body
         $schema = null;
