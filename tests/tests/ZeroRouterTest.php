@@ -69,7 +69,6 @@ class ZeroRouterTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('v1.0', $router->getVersion());
         $this->assertEquals('/path/to/raml/some-api-here/v1.0/index.raml', $router->getApiIndexFile());
         $this->assertEquals('index.raml', $router->getRequestedRamlFile());
-
     }
 
 
