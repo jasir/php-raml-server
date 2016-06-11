@@ -24,27 +24,9 @@ class Server extends Controller
     {
         $this->response->setStatus(501);
         $response = new \stdClass();
-        $response->message = 'Not implemented';
+        $response->message = 'Not implemented (but called)';
         return $response;
     }
 
-    public function patchCorrection ()
-    {
-        $this->response->setStatus(501);
-    }
-
-    public function postCorrection ()
-    {
-        $this->response->setStatus(501);
-    }
-
-    public function getCorrectionDetails ()
-    {
-        $this->response->setStatus(501);
-    }
-    public function postCorrectionDetails ()
-    {
-        $this->response->setStatus(501);
-    }
 
 }
