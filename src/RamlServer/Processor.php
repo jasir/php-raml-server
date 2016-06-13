@@ -11,6 +11,10 @@ use Slim\Http\Request;
 use Slim\Http\Response;
 
 
+/**
+ * Class Processor
+ * @package RamlServer
+ */
 final class Processor
 {
 
@@ -113,7 +117,7 @@ final class Processor
 		}
 
 		// Set the status code of the response to the one the user wants to see
-		$this->appContainer['response']->setStatus($httpExampleCode);
+		$this->response->setStatus($httpExampleCode);
 	}
 
 
