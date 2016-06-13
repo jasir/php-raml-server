@@ -1,8 +1,0 @@
-{
-  "status": 200,
-  "success": true,
-  "data": {
-    "message": "hello",
-    "test": "toto jsou testovací data"
-  }
-}

@@ -1,4 +1,7 @@
 {
+    "name": "jasir/raml-server",
+    "version": "0.0.1",
+    "license": "MIT",
     "require": {
         "slim/slim": "~2.0",
         "slim/extras": "~2.0.0",
