@@ -1,6 +1,29 @@
 #PHP RAML Server
 ==============
 
+Forked from https://github.com/dethbird/PHP_RAML_Server
+
+New Features:
+
+* multiple raml can live on server
+* serving correct *.raml files with correctly set `BaseUri`
+* easy integration to existing site and any framework
+
+TBD:
+
+* refactor out calling real implementation to remove need
+  extend Controller
+* refactor authorisation
+
+Please look at clone & run example of server: ...
+
+Here is gist with notebook examples: https://gist.github.com/jasir/1305abdeec6e259abe1fbf9a0a5c58c4
+
+
+---
+
+Original documentation here...
+
 ##Overview
 
 This is an implementation of a Apache/PHP server which takes a [RAML](http://raml.org) API specification and stubs a working API server leveraging the [Slim Microframework](http://www.slimframework.com/).
@@ -30,15 +53,8 @@ mv configs/configs.example.yml configs/configs.yml
 
 ##Change the API
 
-####Change the API name
-This feature allows you to select the API definition that this server is implementing
-```bash
-# change the `api_name` if desired
-# api_name: "exampl_api"
-vim configs/configs.yml
-```
 ####RAML Specs
-The RAML API definitions reside in `/public/raml/{version}/{api_name}.raml`
+The RAML API definitions reside in `somedir/{version}/{api_name}.raml`
 
 - `{version}`is determined by the version number in the api for example in http://fake-api.com/v1.1/pizza the version is "v1.1"
 - `{api_name}` comes from configs and can me something like "pizza_delivery_api" or "movie_quote_reference_api". Basically by changing this, you are telling the RAML Server what API personality it should assume.
