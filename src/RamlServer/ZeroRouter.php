@@ -8,7 +8,6 @@ use Nette\Utils\Finder;
 use Raml\ApiDefinition;
 use Raml\Parser;
 use Slim\Slim;
-use Symfony\Component\Yaml\Yaml;
 
 
 /**
@@ -109,11 +108,11 @@ class ZeroRouter
 		$app->configureMode('production', function () use ($app) {
 			$app->config(array(
 				'log.enable' => true,
-				'debug' => true
+				'debug' => false
 			));
 		});
 
-		$configs = Yaml::parse(file_get_contents("../configs/configs.yml"));
+		$configs = [];
 		$app->container->set('configs', $configs);
 
 		// parse configured RAML and add api definition to app container
@@ -126,7 +125,7 @@ class ZeroRouter
 		$authenticate = function (Slim $app) {
 			return function () use ($app) {
 				if (false) {
-					$app->halt(403, "Invalid security context");
+					$app->halt(403, 'Invalid security context');
 				}
 			};
 		};
@@ -174,6 +173,10 @@ class ZeroRouter
 			. '/' . $this->getApiName()
 			. '/' . $this->getVersion()
 			. '/' . $this->getRequestedRamlFile();
+
+		if (!file_exists($localPath)) {
+			throw new RamlRuntimeException("File {$localPath} does not exist.");
+		}
 
 		if ($this->getRequestedRamlFile() === 'index.raml') {
 			$apiUrl = $this->getApiUrl();
