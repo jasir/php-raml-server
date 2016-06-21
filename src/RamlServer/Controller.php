@@ -34,15 +34,16 @@ abstract class Controller
 
 
     /**
-     * @param Slim\Helper\Set
-     * @param array
+     * @param Set $appContainer
+     * @param array $route
+     * @internal param $ Slim\Helper\Set
      */
     public function __construct(Set $appContainer, array $route)
     {
         $this->route = $route;
-        $this->configs = $appContainer->get("configs");
-        $this->request = $appContainer->get("request");
-        $this->response = $appContainer->get("response");
+        $this->configs = $appContainer->get('configs');
+        $this->request = $appContainer->get('request');
+        $this->response = $appContainer->get('response');
     }
 
 }

@@ -65,7 +65,7 @@ class ZeroRouter
 		$this->uri = $uri;
 		$this->apiUri = $this->getOption('server') . '/' . $this->getOption('apiUriPart');
 		$this->ramlUri = $this->getOption('server') . '/' . $this->getOption('ramlUriPart');
-		$this->prepare();
+		$this->detectApiUrl();
 	}
 
 
@@ -98,70 +98,9 @@ class ZeroRouter
 
 	public function serveApi()
 	{
-
-		// Load configs and add to the app container
-		$app = new Slim([
-			'mode' => 'production',
-		]);
-
-		// Only invoked if mode is "production"
-		$app->configureMode('production', function () use ($app) {
-			$app->config(array(
-				'log.enable' => true,
-				'debug' => false
-			));
-		});
-
-		$configs = [];
-		$app->container->set('configs', $configs);
-
-		// parse configured RAML and add api definition to app container
-
 		$apiDef = $this->getParsedDefinition();
-
-		$app->container->set('apiDef', $apiDef);
-
-		// This is where a persistence layer ACL check would happen on authentication-related HTTP request items
-		$authenticate = function (Slim $app) {
-			return function () use ($app) {
-				if (false) {
-					$app->halt(403, 'Invalid security context');
-				}
-			};
-		};
-
-		// Loop through the routes and register the API endpoints with the app
-
 		$apiStarts = $this->getOption('apiUriPart') . '/' . $this->getApiName();
-
-		foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
-
-
-			$httpMethod = strtolower($route['method']->getType());
-
-			//get,post,...
-			$app->$httpMethod(
-
-			//route path
-				'/' . $apiStarts . '/' . $apiDef->getVersion() . $route['path'],
-
-				//authenticate middleware
-				$authenticate($app),
-
-				//last middleware
-				function () use ($app, $route) {
-
-					// Process the route
-					$routeProcessor = new Processor($this, $app->container, $route);
-					$routeProcessor->process();
-
-					// API definitions are assumed to have this Content-Type for all content returned
-					$app->response->headers->set('Content-Type', 'application/json');
-				}
-			);
-
-		}
-
+		$app = $this->buildSlimAppWithConfiguredRoutes($apiDef, $apiStarts);
 		$app->run();
 	}
 
@@ -306,7 +245,7 @@ class ZeroRouter
 	}
 
 
-	private function prepare()
+	private function detectApiUrl()
 	{
 		$this->isApi = false;
 		$this->isRaml = false;
@@ -342,6 +281,65 @@ class ZeroRouter
 			. '/' . $this->getOption('apiUriPart')
 			. '/' . $this->getApiName()
 			. '/' . $this->getVersion();
+	}
+
+
+	/**
+	 * @param ApiDefinition $apiDef
+	 * @param $apiStarts
+	 * @return Slim
+	 */
+	private function buildSlimAppWithConfiguredRoutes(ApiDefinition $apiDef, $apiStarts)
+	{
+
+		// This is where a persistence layer ACL check would happen on authentication-related HTTP request items
+		$authenticate = function (Slim $app) {
+			return function () use ($app) {
+				if (false) {
+					$app->halt(403, 'Invalid security context');
+				}
+			};
+		};
+
+		$app = new Slim([
+			'mode' => 'production',
+		]);
+
+		$app->configureMode('production', function () use ($app) {
+			$app->config(array(
+				'log.enable' => true,
+				'debug' => false
+			));
+		});
+
+		foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
+
+			$httpMethod = strtolower($route['method']->getType());
+
+			//get,post,...
+			$app->$httpMethod(
+
+			//route path
+				'/' . $apiStarts . '/' . $apiDef->getVersion() . $route['path'],
+
+				//authenticate middleware
+				$authenticate($app),
+
+				//last middleware
+				function () use ($app, $route) {
+
+					// Process the route
+					$routeProcessor = new Processor($this, $app->container, $app->container->get('request'), $app->container->get('response'), $route);
+					$routeProcessor->process();
+
+					// API definitions are assumed to have this Content-Type for all content returned
+					$app->response->headers->set('Content-Type', 'application/json');
+				}
+			);
+
+		}
+
+		return $app;
 	}
 
 
