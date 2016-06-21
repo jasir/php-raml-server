@@ -135,7 +135,7 @@ final class Processor
 			// Standardize the response format
 			$this->prepareResponse($controller->$methodName());
 
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 			// If validation is not successful, then return 400 Bad Request
 			$this->response->setStatus(400);
 			$this->response->setBody($e->getMessage());
@@ -202,7 +202,7 @@ final class Processor
 		$schema = null;
 		try {
 			$schema = $this->routeDefinition["method"]->getBodyByType("application/json")->getSchema();
-		} catch (\Exception $e) {
+		} catch (Exception $e) {
 		}
 
 		if (!is_null($schema)) {
