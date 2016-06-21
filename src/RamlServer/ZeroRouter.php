@@ -23,7 +23,7 @@ use Slim\Slim;
  *
  * @package RamlServer
  */
-class ZeroRouter
+final class ZeroRouter
 {
 
 	/** @var string */
@@ -157,18 +157,9 @@ class ZeroRouter
 	/**
 	 * @return string
 	 */
-	public function getRamlRootDirectory()
+	public function getRequestedRamlFile()
 	{
-		return $this->getOption('ramlDir');
-	}
-
-
-	/**
-	 * @return mixed|null
-	 */
-	public function getControllerNamespace()
-	{
-		return $this->getOption('controllerNamespace');
+		return $this->ramlFile;
 	}
 
 
@@ -194,16 +185,16 @@ class ZeroRouter
 	/**
 	 * @return string
 	 */
-	public function getRequestedRamlFile()
+	private function getRamlRootDirectory()
 	{
-		return $this->ramlFile;
+		return $this->getOption('ramlDir');
 	}
 
 
 	/**
 	 * @return string
 	 */
-	protected function getApiDirectory()
+	private function getApiDirectory()
 	{
 		return $this->getRamlRootDirectory() . '/' . $this->getApiName() . '/' . $this->getVersion();
 	}
@@ -212,7 +203,7 @@ class ZeroRouter
 	/**
 	 * @return ApiDefinition
 	 */
-	protected function getParsedDefinition()
+	private function getParsedDefinition()
 	{
 		if ($this->cache) {
 			$definition = $this->cache->load($this->getApiIndexFile());
@@ -235,7 +226,7 @@ class ZeroRouter
 	/**
 	 * @return ApiDefinition
 	 */
-	protected function createParsedDefinition()
+	private function createParsedDefinition()
 	{
 		$ramlIndexPath = $this->getApiIndexFile();
 		$source = file_get_contents($ramlIndexPath);
