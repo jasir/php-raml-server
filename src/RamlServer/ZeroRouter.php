@@ -229,6 +229,9 @@ final class ZeroRouter
 	private function createParsedDefinition()
 	{
 		$ramlIndexPath = $this->getApiIndexFile();
+		if (!file_exists($ramlIndexPath)) {
+			throw new RamlRuntimeException("File {$ramlIndexPath} does not exist.");
+		}
 		$source = file_get_contents($ramlIndexPath);
 		$parser = new Parser();
 		return $parser->parseFromString($source, $this->getApiDirectory());
