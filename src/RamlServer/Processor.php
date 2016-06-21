@@ -45,13 +45,15 @@ final class Processor
 	/**
 	 * @param ZeroRouter $router
 	 * @param Set $appContainer
+	 * @param Request $request
+	 * @param Response $response
 	 * @param array $routeDefinition The parsed RAML definition for the route that we are processing
 	 */
-	public function __construct(ZeroRouter $router, Set $appContainer, array $routeDefinition)
+	public function __construct(ZeroRouter $router, Set $appContainer, Request $request, Response $response, array $routeDefinition)
 	{
 		$this->routeDefinition = $routeDefinition;
-		$this->request = $appContainer->get('request');
-		$this->response = $appContainer->get('response');
+		$this->request = $request;
+		$this->response = $response;
 		$this->appContainer = $appContainer;
 		$this->router = $router;
 	}
