@@ -99,8 +99,7 @@ class ZeroRouter
 	public function serveApi()
 	{
 		$apiDef = $this->getParsedDefinition();
-		$apiStarts = $this->getOption('apiUriPart') . '/' . $this->getApiName();
-		$app = $this->buildSlimAppWithConfiguredRoutes($apiDef, $apiStarts);
+		$app = $this->buildSlimAppWithConfiguredRoutes($apiDef);
 		$app->run();
 	}
 
@@ -285,12 +284,12 @@ class ZeroRouter
 
 
 	/**
-	 * @param ApiDefinition $apiDef
-	 * @param $apiStarts
+	 * @param ApiDefinition $apiDefinition
 	 * @return Slim
 	 */
-	private function buildSlimAppWithConfiguredRoutes(ApiDefinition $apiDef, $apiStarts)
+	private function buildSlimAppWithConfiguredRoutes(ApiDefinition $apiDefinition)
 	{
+		$apiStarts = $this->getOption('apiUriPart') . '/' . $this->getApiName();
 
 		// This is where a persistence layer ACL check would happen on authentication-related HTTP request items
 		$authenticate = function (Slim $app) {
@@ -312,7 +311,7 @@ class ZeroRouter
 			));
 		});
 
-		foreach ($apiDef->getResourcesAsUri()->getRoutes() as $route) {
+		foreach ($apiDefinition->getResourcesAsUri()->getRoutes() as $route) {
 
 			$httpMethod = strtolower($route['method']->getType());
 
@@ -320,7 +319,7 @@ class ZeroRouter
 			$app->$httpMethod(
 
 			//route path
-				'/' . $apiStarts . '/' . $apiDef->getVersion() . $route['path'],
+				'/' . $apiStarts . '/' . $apiDefinition->getVersion() . $route['path'],
 
 				//authenticate middleware
 				$authenticate($app),
