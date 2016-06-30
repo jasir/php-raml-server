@@ -58,6 +58,9 @@ final class ZeroRouter
 	/** @var IProcessorFactory[] */
 	private $factories = [];
 
+	/** @var Slim */
+	private $app;
+
 
 	/**
 	 * ZeroRouter constructor.
@@ -84,6 +87,24 @@ final class ZeroRouter
 
 
 	/**
+	 * @return Request
+	 */
+	public function getRequest()
+	{
+		return $this->app->container->get('request');
+	}
+
+
+	/**
+	 * @return Response
+	 */
+	public function getResponse()
+	{
+		return $this->app->container->get('response');
+	}
+
+
+	/**
 	 * @return bool
 	 */
 	public function isApiRequest()
@@ -104,8 +125,8 @@ final class ZeroRouter
 	public function serveApi()
 	{
 		$apiDef = $this->getParsedDefinition();
-		$app = $this->buildSlimAppWithConfiguredRoutes($apiDef);
-		$app->run();
+		$this->app = $this->buildSlimAppWithConfiguredRoutes($apiDef);
+		$this->app->run();
 	}
 
 
