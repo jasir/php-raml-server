@@ -7,6 +7,8 @@ use Nette\Caching\Cache;
 use Nette\Utils\Finder;
 use Raml\ApiDefinition;
 use Raml\Parser;
+use Slim\Http\Request;
+use Slim\Http\Response;
 use Slim\Slim;
 
 
@@ -52,6 +54,9 @@ final class ZeroRouter
 
 	/** @var Cache */
 	private $cache;
+
+	/** @var IProcessorFactory[] */
+	private $factories = [];
 
 
 	/**
@@ -183,6 +188,15 @@ final class ZeroRouter
 
 
 	/**
+	 * @param IProcessorFactory $processorFactory
+	 */
+	public function addProcessor(IProcessorFactory $processorFactory)
+	{
+		$this->factories[] = $processorFactory;
+	}
+
+
+	/**
 	 * @return string
 	 */
 	private function getRamlRootDirectory()
@@ -225,6 +239,7 @@ final class ZeroRouter
 
 	/**
 	 * @return ApiDefinition
+	 * @throws RamlRuntimeException
 	 */
 	private function createParsedDefinition()
 	{
@@ -248,8 +263,14 @@ final class ZeroRouter
 			$parts = explode('/', $part);
 
 			if ((count($parts) >= 2) && (!empty($parts[0])) && (!empty($parts[1]))) {
-				list($this->apiName, $this->version) = $parts;
-				$this->isApi = true;
+				list($apiName, $version) = $parts;
+
+				if (preg_match('/\A[vV]{0,1} [\d]+ (\.[\d]+(\.[\d]+){0,1}){0,1}\Z/mx', $version)) {
+					$this->version = $version;
+					$this->apiName = $apiName;
+					$this->isApi = true;
+				}
+
 			}
 		} elseif (strpos($this->uri, $this->ramlUri) === 0) {
 			$part = substr($this->uri, strlen($this->ramlUri) + 1);
@@ -321,9 +342,23 @@ final class ZeroRouter
 				//last middleware
 				function () use ($app, $route) {
 
-					// Process the route
-					$routeProcessor = new Processor($this, $app->container, $app->container->get('request'), $app->container->get('response'), $route);
-					$routeProcessor->process();
+					/** @var Request $request */
+					$request = $app->container->get('request');
+					/** @var Response $response */
+					$response = $app->container->get('response');
+
+					$handled = false;
+
+					foreach ($this->factories as $processorFactory) {
+						$processor = $processorFactory->create();
+						if ($handled = $processor->process($this, $request, $response, $route) === true) {
+							break;
+						}
+					}
+
+					if ($handled === false) {
+						throw new RamlRuntimeException('Sorry');
+					}
 
 					// API definitions are assumed to have this Content-Type for all content returned
 					$app->response->headers->set('Content-Type', 'application/json');

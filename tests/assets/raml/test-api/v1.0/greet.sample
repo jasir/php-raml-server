@@ -1,0 +1,7 @@
+{
+  "status": 200,
+  "success": true,
+  "data": {
+    "greetings": "Hello, John Doe!"
+  }
+}
