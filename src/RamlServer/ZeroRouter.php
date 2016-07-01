@@ -55,7 +55,7 @@ final class ZeroRouter
 	/** @var Cache */
 	private $cache;
 
-	/** @var IProcessorFactory[] */
+	/** @var IProcessorFactory|callable[] */
 	private $factories = [];
 
 	/** @var Slim */
@@ -209,10 +209,14 @@ final class ZeroRouter
 
 
 	/**
-	 * @param IProcessorFactory $processorFactory
+	 * @param IProcessorFactory|callable $processorFactory
+	 * @throws RamlRuntimeException
 	 */
-	public function addProcessor(IProcessorFactory $processorFactory)
+	public function addProcessor($processorFactory)
 	{
+		if (!$processorFactory instanceof IProcessorFactory && !is_callable($processorFactory)) {
+			throw new RamlRuntimeException('Factory must be callable or implement IProcessorFactory');
+		}
 		$this->factories[] = $processorFactory;
 	}
 
@@ -355,6 +359,9 @@ final class ZeroRouter
 			$app->$httpMethod(
 
 			//route path
+			/**
+			 * @throws RamlRuntimeException
+			 */
 				'/' . $apiStarts . '/' . $apiDefinition->getVersion() . $route['path'],
 
 				//authenticate middleware
@@ -363,15 +370,13 @@ final class ZeroRouter
 				//last middleware
 				function () use ($app, $route) {
 
-					/** @var Request $request */
-					$request = $app->container->get('request');
-					/** @var Response $response */
-					$response = $app->container->get('response');
+					$request = $this->getRequest();
+					$response = $this->getResponse();
 
 					$handled = false;
 
 					foreach ($this->factories as $processorFactory) {
-						$processor = $processorFactory->create();
+						$processor = $processorFactory instanceof IProcessorFactory ? $processorFactory->create() : $processorFactory();
 						if ($handled = $processor->process($this, $request, $response, $route) === true) {
 							break;
 						}
