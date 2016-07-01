@@ -5,7 +5,6 @@ namespace RamlServer;
 
 
 use Slim\Environment;
-use Slim\Slim;
 
 class ZeroRouterTest extends RamlServerTestCase
 {
@@ -100,6 +99,7 @@ class ZeroRouterTest extends RamlServerTestCase
 		$this->assertEquals('default', $router->getOption('none', 'default'));
 
 		try {
+			$catch = false;
 			$router->getOption('none');
 		} catch (\InvalidArgumentException $e) {
 			$this->assertInstanceOf(\InvalidArgumentException::class, $e);
@@ -134,14 +134,6 @@ class ZeroRouterTest extends RamlServerTestCase
 	 */
 	public function test_serveApi($uri, $expectedOutput)
 	{
-		$server = 'www.api.com';
-
-		$pathInfo = $uri;
-		$pos = strpos($uri, '?');
-		if ($pos !== false) {
-			$pathInfo = substr($pathInfo, 0, $pos);
-		}
-
 		list($pathInfo, $queryString) = explode('?', $uri, 2);
 
 		$defaultHeaders = [
@@ -165,7 +157,7 @@ class ZeroRouterTest extends RamlServerTestCase
 
 		$url = 'http://www.api.com' . $uri;
 
-		$router = new ZeroRouter($options, $url);
+		$router = new ZeroRouter($options, $url);   
 
 		$router->addProcessor(new MockProcessorFactory(false));
 		$router->addProcessor(new DefaultProcessorFactory('RamlServer'));
