@@ -72,8 +72,8 @@ class ProcessorHelpers
 	 * @param $snakeName
 	 * @return string
 	 */
-	public static function snakeToCamel($snakeName)
+	public static function snakeToCamel($snakeName, $snakeChars = ['_', '-'])
 	{
-		return str_replace(' ', '', ucwords(str_replace(['_', '-'], [' ', ' '], $snakeName)));
+		return str_replace(' ', '', ucwords(str_replace($snakeChars, ' ', $snakeName)));
 	}
 }
