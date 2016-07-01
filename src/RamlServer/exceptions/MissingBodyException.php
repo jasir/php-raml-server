@@ -2,8 +2,6 @@
 
 namespace RamlServer;
 
-use Exception;
-
-class MissingBodyException extends Exception
+class MissingBodyException extends RamlRuntimeException
 {
 }

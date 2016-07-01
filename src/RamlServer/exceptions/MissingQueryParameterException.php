@@ -2,8 +2,6 @@
 
 namespace RamlServer;
 
-use Exception;
-
-class MissingQueryParameterException extends Exception
+class MissingQueryParameterException extends RamlRuntimeException
 {
 }

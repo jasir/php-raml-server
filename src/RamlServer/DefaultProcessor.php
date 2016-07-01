@@ -68,6 +68,7 @@ final class DefaultProcessor implements IProcessor
 	 * @param Response $response
 	 * @param array $routeDefinition
 	 * @return bool
+	 * @throws RamlRuntimeException
 	 */
 	public function process(ZeroRouter $router, Request $request, Response $response, array $routeDefinition)
 	{
@@ -101,7 +102,7 @@ final class DefaultProcessor implements IProcessor
 		if ($controller) {
 			try {
 				// Validate the request
-				$this->validateRequest();
+				ProcessorHelpers::validateRequest($this->request, $this->routeDefinition);
 				// Standardize the response format
 				$this->prepareResponse($controller->$methodName());
 
@@ -136,59 +137,6 @@ final class DefaultProcessor implements IProcessor
 		$response = json_encode($response);
 		$this->response->setBody($response);
 		return $response;
-	}
-
-
-	/**
-	 * Run validation on headers, query parameters, and body against the route definition,
-	 * verifying that required items exist. It returns nothing, but throws Exceptions if
-	 * a validation does not pass
-	 */
-	private function validateRequest()
-	{
-
-		// validate headers
-		/** @var $namedParameter */
-		foreach ($this->routeDefinition["method"]->getHeaders() as $namedParameter) {
-
-			if ($namedParameter->isRequired() === true) {
-				if (!in_array($namedParameter->getKey(), $this->request->headers->keys(), true)) {
-					$message = array();
-					$message['missing_header'][$namedParameter->getKey()] = $namedParameter->getDescription();
-					throw new MissingHeaderException(json_encode($message));
-				}
-			}
-		}
-
-		// validate query parameters
-		foreach ($this->routeDefinition["method"]->getQueryParameters() as $namedParameter) {
-			if ($namedParameter->isRequired() === true) {
-				if (!in_array($namedParameter->getKey(), array_keys($this->request->params()), true)) {
-					$message = array();
-					$message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
-					throw new MissingQueryParameterException(json_encode($message));
-				}
-			}
-		}
-
-		// validate body
-		$schema = null;
-		try {
-			$schema = $this->routeDefinition["method"]->getBodyByType("application/json")->getSchema();
-		} catch (Exception $e) {
-		}
-
-		if (!is_null($schema)) {
-
-			if ($schema->getJsonObject()->required) {
-				if ($this->request->getBody() == "") {
-					$message = array();
-					$message["missing_body"]["schema"] = json_decode($schema->__toString());
-					throw new MissingBodyException(json_encode($message));
-				}
-			}
-		}
-
 	}
 
 
