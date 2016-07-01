@@ -145,18 +145,8 @@ final class DefaultProcessor implements IProcessor
 	 */
 	private function generateClassName()
 	{
-		$apiName = $this->router->getApiName();
-
-		$words = explode('-', str_replace('_', '-', $apiName));
-		$className = implode('', array_map(function ($word) {
-			return ucfirst($word);
-		}, $words));
-
-		if ($this->namespace) {
-			return $this->namespace . '\\' . $className;
-		} else {
-			return $className;
-		}
+		$className = ProcessorHelpers::snakeToCamel($this->router->getApiName());
+		return $this->namespace ? $this->namespace . '\\' . $className : $className;
 	}
 
 
