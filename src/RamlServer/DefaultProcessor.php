@@ -68,7 +68,7 @@ final class DefaultProcessor implements IProcessor
 	 * @param $namespace
 	 * @return string
 	 */
-	static public function generateClassName($apiName, $namespace)
+	static public function generateClassName($apiName, $namespace = null)
 	{
 		$className = ProcessorHelpers::snakeToCamel($apiName);
 		return $namespace ? $namespace . '\\' . $className : $className;
@@ -83,16 +83,11 @@ final class DefaultProcessor implements IProcessor
 	 */
 	static public function generateMethodName($httpMethod, $path)
 	{
-		$pathInfo = pathinfo($path);
-		$dirName = ltrim($pathInfo['dirname'], '/');
-		$dirName = ltrim($dirName, "\\");
-		$methodName = strtolower($httpMethod) . '_' . ($dirName ? str_replace('/', '_', $dirName) . '_' . $pathInfo['basename'] : $pathInfo['basename']);
-		$methodName = lcfirst(str_replace('_', '', ucwords($methodName, '_')));
-		return $methodName;
+		return strtolower($httpMethod) . ProcessorHelpers::snakeToCamel($path, ['/']);
 	}
 
 
-	/**
+	/**2
 	 * @param ZeroRouter $router
 	 * @param Request $request
 	 * @param Response $response    
