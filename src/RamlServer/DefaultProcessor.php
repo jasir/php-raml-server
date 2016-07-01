@@ -27,12 +27,13 @@ final class DefaultProcessor implements IProcessor
 	 */
 
 	private $routeDefinition;
+
 	/**
 	 * The request object
 	 * @var Request
 	 */
-
 	private $request;
+
 	/**
 	 * The response object
 	 * @var Response
@@ -63,9 +64,38 @@ final class DefaultProcessor implements IProcessor
 
 
 	/**
+	 * @param $apiName
+	 * @param $namespace
+	 * @return string
+	 */
+	static public function generateClassName($apiName, $namespace)
+	{
+		$className = ProcessorHelpers::snakeToCamel($apiName);
+		return $namespace ? $namespace . '\\' . $className : $className;
+	}
+
+
+	/**
+	 * ie. getSomething
+	 * @param $httpMethod
+	 * @param $path
+	 * @return string
+	 */
+	static public function generateMethodName($httpMethod, $path)
+	{
+		$pathInfo = pathinfo($path);
+		$dirName = ltrim($pathInfo['dirname'], '/');
+		$dirName = ltrim($dirName, "\\");
+		$methodName = strtolower($httpMethod) . '_' . ($dirName ? str_replace('/', '_', $dirName) . '_' . $pathInfo['basename'] : $pathInfo['basename']);
+		$methodName = lcfirst(str_replace('_', '', ucwords($methodName, '_')));
+		return $methodName;
+	}
+
+
+	/**
 	 * @param ZeroRouter $router
 	 * @param Request $request
-	 * @param Response $response
+	 * @param Response $response    
 	 * @param array $routeDefinition
 	 * @return bool
 	 * @throws RamlRuntimeException
@@ -80,8 +110,8 @@ final class DefaultProcessor implements IProcessor
 
 		// Create controller class
 
-		$className = $this->generateClassName();
-		$methodName = $this->generateMethodName();
+		$className = DefaultProcessor::generateClassName($this->router->getApiName(), $this->namespace);
+		$methodName = DefaultProcessor::generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
 
 		$controller = class_exists($className)
 			? new $className($request, $response, $router, $routeDefinition)
@@ -137,31 +167,6 @@ final class DefaultProcessor implements IProcessor
 		$response = json_encode($response);
 		$this->response->setBody($response);
 		return $response;
-	}
-
-
-	/**
-	 * @return string
-	 */
-	private function generateClassName()
-	{
-		$className = ProcessorHelpers::snakeToCamel($this->router->getApiName());
-		return $this->namespace ? $this->namespace . '\\' . $className : $className;
-	}
-
-
-	/**
-	 * ie. getSomething
-	 * @return string
-	 */
-	private function generateMethodName()
-	{
-		$pathInfo = pathinfo($this->routeDefinition['path']);
-		$dirName = ltrim($pathInfo['dirname'], '/');
-		$dirName = ltrim($dirName, "\\");
-		$method = strtolower($this->routeDefinition['type']) . '_' . ($dirName ? str_replace('/', '_', $dirName) . '_' . $pathInfo['basename'] : $pathInfo['basename']);
-		$method = lcfirst(str_replace('_', '', ucwords($method, '_')));
-		return $method;
 	}
 
 
