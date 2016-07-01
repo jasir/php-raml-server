@@ -65,4 +65,18 @@ class ProcessorHelpers
 		}
 
 	}
+
+
+	/**
+	 * @param $snakeName
+	 * @return string
+	 */
+	public static function snakeToCamel($snakeName)
+	{
+		$words = explode('-', str_replace('_', '-', $snakeName));
+		$className = implode('', array_map(function ($word) {
+			return ucfirst($word);
+		}, $words));
+		return $className;
+	}
 }
