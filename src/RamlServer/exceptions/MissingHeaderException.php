@@ -4,6 +4,6 @@ namespace RamlServer;
 
 use Exception;
 
-class MissingHeaderException extends Exception
+class MissingHeaderException extends RamlRuntimeException
 {
 }
