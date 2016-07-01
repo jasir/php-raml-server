@@ -68,15 +68,12 @@ class ProcessorHelpers
 
 
 	/**
+	 * Converts snake_case to CamelCase, accepts both - and _
 	 * @param $snakeName
 	 * @return string
 	 */
 	public static function snakeToCamel($snakeName)
 	{
-		$words = explode('-', str_replace('_', '-', $snakeName));
-		$className = implode('', array_map(function ($word) {
-			return ucfirst($word);
-		}, $words));
-		return $className;
+		return str_replace(' ', '', ucwords(str_replace(['_', '-'], [' ', ' '], $snakeName)));
 	}
 }
