@@ -78,6 +78,15 @@ final class ZeroRouter
 
 
 	/**
+	 * @param Slim $app
+	 */
+	public function setSlimApp(Slim $app)
+	{
+		$this->app = $app;
+	}
+
+
+	/**
 	 * @param Cache $cache
 	 */
 	public function setCache(Cache $cache)
@@ -125,7 +134,10 @@ final class ZeroRouter
 	public function serveApi()
 	{
 		$apiDef = $this->getParsedDefinition();
-		$this->app = $this->buildSlimAppWithConfiguredRoutes($apiDef);
+		if ($this->app === null) {
+			$this->createSlimApp();
+		}
+		$this->configureRouter($apiDef);
 		$this->app->run();
 	}
 
@@ -327,7 +339,7 @@ final class ZeroRouter
 	 * @param ApiDefinition $apiDefinition
 	 * @return Slim
 	 */
-	private function buildSlimAppWithConfiguredRoutes(ApiDefinition $apiDefinition)
+	private function configureRouter(ApiDefinition $apiDefinition)
 	{
 		$apiStarts = $this->getOption('apiUriPart') . '/' . $this->getApiName();
 
@@ -340,23 +352,16 @@ final class ZeroRouter
 			};
 		};
 
-		$app = new Slim([
-			'mode' => 'production',
-		]);
-
-		$app->configureMode('production', function () use ($app) {
-			$app->config(array(
-				'log.enable' => true,
-				'debug' => false
-			));
-		});
+		if ($this->app === null) {
+			$this->app = $this->createSlimApp();
+		}
 
 		foreach ($apiDefinition->getResourcesAsUri()->getRoutes() as $route) {
 
 			$httpMethod = strtolower($route['method']->getType());
 
 			//get,post,...
-			$app->$httpMethod(
+			$this->app->$httpMethod(
 
 			//route path
 			/**
@@ -365,10 +370,10 @@ final class ZeroRouter
 				'/' . $apiStarts . '/' . $apiDefinition->getVersion() . $route['path'],
 
 				//authenticate middleware
-				$authenticate($app),
+				$authenticate($this->app),
 
 				//last middleware
-				function () use ($app, $route) {
+				function () use ($route) {
 
 					$request = $this->getRequest();
 					$response = $this->getResponse();
@@ -383,15 +388,35 @@ final class ZeroRouter
 					}
 
 					if ($handled === false) {
-						throw new RamlRuntimeException('Sorry');
+						throw new RamlRuntimeException('No processor handled this API request.');
 					}
 
 					// API definitions are assumed to have this Content-Type for all content returned
-					$app->response->headers->set('Content-Type', 'application/json');
+					$this->app->response->headers->set('Content-Type', 'application/json');
 				}
 			);
 
 		}
+	}
+
+
+	/**
+	 * @return Slim
+	 */
+	private function createSlimApp()
+	{
+		$app = new Slim([
+			'mode' => 'production',
+		]);
+
+		unset($app->container['errorHandler']);
+
+		$app->configureMode('production', function () use ($app) {
+			$app->config(array(
+				'log.enable' => true,
+				'debug' => true
+			));
+		});
 
 		return $app;
 	}
