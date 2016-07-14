@@ -142,6 +142,9 @@ final class ZeroRouter
 	}
 
 
+	/**
+	 * @throws RamlRuntimeException
+	 */
 	public function serveRamlFiles()
 	{
 		header('Content-Type: text/raml');
@@ -187,8 +190,7 @@ final class ZeroRouter
 	 */
 	public function getApiIndexFile()
 	{
-		return
-			$this->getApiDirectory() . '/index.raml';
+		return $this->getApiDirectory() . '/index.raml';
 	}
 
 
@@ -205,6 +207,7 @@ final class ZeroRouter
 	 * @param $optionName
 	 * @param null $default
 	 * @return mixed|null
+	 * @internal
 	 */
 	public function getOption($optionName, $default = null)
 	{

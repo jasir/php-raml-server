@@ -177,6 +177,7 @@ class ZeroRouterTest extends RamlServerTestCase
 		$this->assertEquals($expected, $output);
 
 		$this->assertEquals(200, $router->getResponse()->getStatus());
+
 	}
 
 }
