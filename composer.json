@@ -3,8 +3,8 @@
     "version": "0.0.1",
     "license": "MIT",
     "require": {
-        "slim/slim": "~2.0",
-        "slim/extras": "~2.0.0",
+        "slim/slim": "^2.0",
+        "slim/extras": "^2.0.0",
         "guzzlehttp/guzzle": "~6.0.0",
         "alecsammon/php-raml-parser": "~2.0",
         "tracy/tracy": "^2.3",
