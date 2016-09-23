@@ -9,7 +9,7 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 
 
 	/**
-	 * Removes unecessary whitespaces for easier comparing
+	 * Removes unnecessary whitespaces for easier comparing
 	 * @param string $s
 	 * @returns string
 	 */
@@ -36,6 +36,11 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 	}
 
 
+	/**
+	 * @param $closure
+	 * @param string $expectedExceptionClass
+	 * @param string $expectedMessage
+	 */
 	protected function assertException($closure, $expectedExceptionClass = 'Exception', $expectedMessage = NULL)
 	{
 		try {
@@ -50,28 +55,6 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 			return;
 		}
 		$this->fail("Expected exception $expectedExceptionClass was not thrown");
-	}
-
-
-	/**
-	 * Asserts entity data equals, ignores updatedBy, createdBy, updated, created
-	 * @param $expected
-	 * @param $actual
-	 * @param null $message
-	 */
-	protected function assertEntityDataEquals($expected, $actual, $message = null)
-	{
-
-		if ($expected === null) {
-			$this->assertNull($actual);
-			return;
-		}
-
-		$this->assertEquals(
-			$this->nullifySystemProperties($expected),
-			$this->nullifySystemProperties($actual), $message
-		);
-
 	}
 
 
@@ -100,20 +83,5 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 		$actual = substr($actual, -strlen($suffix));
 		parent::assertEquals($suffix, $actual, $message);
 	}
-
-
-	private function nullifySystemProperties($array)
-	{
-		if (!is_array($array)) {
-			return $array;
-		}
-		array_walk_recursive($array, function (&$value, $key) {
-			if (in_array($key, ['updatedBy', 'createdBy', 'updated', 'created'])) {
-				$value = null;
-			}
-		});
-		return $array;
-	}
-
 
 }
