@@ -17,6 +17,8 @@ TBD:
 
 Please look at clone & run example of server: ...
 
+Integration with Nette framework + fully working API server: https://github.com/jasir/raml-server-nette-example
+
 Here is gist with notebook examples: https://gist.github.com/jasir/1305abdeec6e259abe1fbf9a0a5c58c4
 
 
