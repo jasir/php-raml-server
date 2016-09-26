@@ -78,7 +78,7 @@ final class MockProcessor implements IProcessor
 		$requestedExampleResponseCode = $requestedExampleResponseCode ?: 200;
 
 		try {
-			RequestValidator::validate($request, $routeDefinition);
+			RequestValidator::validate($request, $routeDefinition['method']);
 		} catch (RamlRuntimeException $e) {
 			$this->sendError($e);
 			return true;
