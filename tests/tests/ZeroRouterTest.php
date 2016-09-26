@@ -140,7 +140,9 @@ class ZeroRouterTest extends RamlServerTestCase
 	 * @dataProvider requestsProvider
 	 * @param $uri
 	 * @param $expectedOutput
+	 * @param int $expectedCode
 	 * @throws RamlRuntimeException
+	 * @throws \Nette\Utils\JsonException
 	 */
 	public function test_serveApi($uri, $expectedOutput, $expectedCode = 200)
 	{
