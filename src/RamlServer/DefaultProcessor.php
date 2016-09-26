@@ -127,7 +127,7 @@ final class DefaultProcessor implements IProcessor
 		if ($controller) {
 			try {
 				// Validate the request
-				ProcessorHelpers::validateRequest($this->request, $this->routeDefinition);
+				RequestValidator::validate($this->request, $this->routeDefinition['method']);
 				// Standardize the response format
 				$this->prepareResponse($controller->$methodName());
 				return true;

@@ -6,6 +6,7 @@ use InvalidArgumentException;
 use Nette\Caching\Cache;
 use Nette\Utils\Finder;
 use Raml\ApiDefinition;
+use Raml\Method;
 use Raml\Parser;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -55,7 +56,7 @@ final class ZeroRouter
 	/** @var Cache */
 	private $cache;
 
-	/** @var IProcessorFactory|callable[] */
+	/** @var mixed[] */
 	private $factories = [];
 
 	/** @var Slim */
@@ -256,6 +257,7 @@ final class ZeroRouter
 
 	/**
 	 * @return ApiDefinition
+	 * @throws RamlRuntimeException
 	 */
 	private function getParsedDefinition()
 	{
@@ -340,7 +342,6 @@ final class ZeroRouter
 
 	/**
 	 * @param ApiDefinition $apiDefinition
-	 * @return Slim
 	 */
 	private function configureRouter(ApiDefinition $apiDefinition)
 	{
@@ -361,7 +362,9 @@ final class ZeroRouter
 
 		foreach ($apiDefinition->getResourcesAsUri()->getRoutes() as $route) {
 
-			$httpMethod = strtolower($route['method']->getType());
+			/** @var Method $method */
+			$method = $route['method'];
+			$httpMethod = strtolower($method->getType());
 
 			//get,post,...
 			$this->app->$httpMethod(

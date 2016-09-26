@@ -4,6 +4,7 @@
 namespace RamlServer;
 
 
+use Nette\Utils\Json;
 use Slim\Environment;
 
 class ZeroRouterTest extends RamlServerTestCase
@@ -95,7 +96,7 @@ class ZeroRouterTest extends RamlServerTestCase
 			'www.api.com/api/some-api-here/v1.0/users/logged/?q=1'
 		);
 
-		$this->assertEquals('www.api.com', $router->getOption('server'));
+		$this->assertEquals(self::WWW_API_COM, $router->getOption('server'));
 		$this->assertEquals('default', $router->getOption('none', 'default'));
 
 		try {
@@ -111,16 +112,24 @@ class ZeroRouterTest extends RamlServerTestCase
 	}
 
 
+	/**
+	 * @return array
+	 */
 	public function requestsProvider()
 	{
 		return [
 			[
 				'uri' => '/api/test-api/v1.0/greet?who=Jaroslav',
-				'expectedOutput' => '{"status":200,"success":true,"data":{"greetings":"Hello, Jaroslav"}}'
+				'expectedOutput' => '{"status":200,"success":true,"data":{"greetings":"Hello, Jaroslav"}}',
 			],
 			[
 				'uri' => '/api/test-api/v1.0/kill?who=Mocked',
 				'expectedOutput' => '{"status":200,"success":true,"data":{"killed":"I shot John Doe!"}}'
+			],
+			[
+				'uri' => '/api/test-api/v1.0/needParameter',
+				'expectedOutput' => '{ "error": "Missing required query parameter `fill`", "success": false }',
+				'expectedCode' => 500,
 			],
 
 		];
@@ -131,33 +140,24 @@ class ZeroRouterTest extends RamlServerTestCase
 	 * @dataProvider requestsProvider
 	 * @param $uri
 	 * @param $expectedOutput
+	 * @param int $expectedCode
+	 * @throws RamlRuntimeException
+	 * @throws \Nette\Utils\JsonException
 	 */
-	public function test_serveApi($uri, $expectedOutput)
+	public function test_serveApi($uri, $expectedOutput, $expectedCode = 200)
 	{
-		list($pathInfo, $queryString) = explode('?', $uri, 2);
-
-		$defaultHeaders = [
-			'SERVER_NAME' => 'www.api.com',
-			'REQUEST_SCHEME' => 'http',
-			'REQUEST_URI' => $uri,
-			'PATH_INFO' => $pathInfo,
-			'QUERY_STRING' => $queryString,
-			'slim.url_scheme' => 'http'
-		];
-
-		Environment::mock($defaultHeaders);
+		$this->prepareMockedSlimEnvironment($uri);
 
 		$options = [
-			'server' => 'http://www.api.com',
+			'server' => self::WWW_API_COM, //www.api.com
 			'apiUriPart' => 'api',
 			'ramlDir' => __DIR__ . '/../assets/raml',
 			'ramlUriPart' => 'raml'
 		];
 
 
-		$url = 'http://www.api.com' . $uri;
-
-		$router = new ZeroRouter($options, $url);   
+		$url = self::WWW_API_COM . $uri;
+		$router = new ZeroRouter($options, $url);
 
 		$router->addProcessor(new MockProcessorFactory(false));
 		$router->addProcessor(new DefaultProcessorFactory('RamlServer'));
@@ -171,13 +171,14 @@ class ZeroRouterTest extends RamlServerTestCase
 		$router->serveApi();
 		$content = ob_get_clean();
 
-		$output = $this->normalizeWhitespaces(json_encode(json_decode($content)));
-		$expected = $this->normalizeWhitespaces(json_encode(json_decode($expectedOutput)));
+		$output = $this->normalizeWhitespaces(Json::encode(Json::decode($content), Json::PRETTY));
+		$expected = $this->normalizeWhitespaces(Json::encode(Json::decode($expectedOutput), Json::PRETTY));
 
 		$this->assertEquals($expected, $output);
 
-		$this->assertEquals(200, $router->getResponse()->getStatus());
+		$this->assertEquals($expectedCode, $router->getResponse()->getStatus());
 
 	}
+
 
 }

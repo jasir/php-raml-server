@@ -2,8 +2,13 @@
 
 namespace RamlServer;
 
+use Slim\Environment;
+
 abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 {
+	const WWW_API_COM = 'www.api.com';
+	const WWW_METHOD = 'http';
+
 	/** @var \Mockista\Registry */
 	protected $mockista;
 
@@ -82,6 +87,26 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 		$actual = self::normalizeWhitespaces($actual);
 		$actual = substr($actual, -strlen($suffix));
 		parent::assertEquals($suffix, $actual, $message);
+	}
+
+
+	/**
+	 * @param $uri
+	 */
+	protected function prepareMockedSlimEnvironment($uri)
+	{
+		list($pathInfo, $queryString) = explode('?', $uri, 2);
+
+		$defaultHeaders = [
+			'SERVER_NAME' => self::WWW_METHOD . '://' . self::WWW_API_COM,
+			'REQUEST_SCHEME' => self::WWW_METHOD,
+			'REQUEST_URI' => $uri,
+			'PATH_INFO' => $pathInfo,
+			'QUERY_STRING' => $queryString,
+			'slim.url_scheme' => self::WWW_METHOD
+		];
+
+		Environment::mock($defaultHeaders);
 	}
 
 }
