@@ -32,3 +32,14 @@ baseUri: http://www.api.com
           application/json:
             example: !include kill.sample
 
+/needParameter:
+  get:
+    queryParameters:
+      fill:
+        description: Needed parameter
+        example: 'fill-me'
+        required: true
+    responses:
+      200:
+        description: I was filled
+
