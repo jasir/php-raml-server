@@ -2,6 +2,7 @@
 
 namespace RamlServer;
 
+use Raml\Body;
 use Raml\Method;
 use Raml\Schema\Definition\JsonSchemaDefinition;
 use Slim\Http\Request;
@@ -85,7 +86,9 @@ class RequestValidator
 
 		$bodies = $method->getBodies();
 		if (isset($bodies['application/json'])) {
-			$schema = $method->getBodyByType('application/json')->getSchema();
+			/** @var Body $body */
+			$body = $method->getBodyByType('application/json');
+			$schema = $body->getSchema();
 		}
 
 		if ($schema !== null) {
