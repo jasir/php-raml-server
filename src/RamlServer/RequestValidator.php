@@ -44,9 +44,10 @@ class RequestValidator
 				$testKey = strtolower($namedParameter->getKey());
 				$lowerKeys = array_map('strtolower', $request->headers->keys());
 				if (!in_array($testKey, $lowerKeys, true)) {
-					$message = array();
-					$message['missing_header'][$namedParameter->getKey()] = $namedParameter->getDescription();
-					throw new MissingHeaderException(json_encode($message));
+					$key = $namedParameter->getKey();
+					throw new MissingHeaderException(
+						"Missing required header `$key`"
+					);
 				}
 			}
 		}
@@ -64,10 +65,11 @@ class RequestValidator
 		$method = $routeDefinition['method'];
 		foreach ($method->getQueryParameters() as $namedParameter) {
 			if ($namedParameter->isRequired() === true) {
-				if (array_key_exists($namedParameter->getKey(), $request->params())) {
-					$message = array();
-					$message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
-					throw new MissingQueryParameterException(json_encode($message));
+				if (!array_key_exists($namedParameter->getKey(), $request->params())) {
+					$key = $namedParameter->getKey();
+					throw new MissingQueryParameterException(
+						"Missing required query parameter `$key`"
+					);
 				}
 			}
 		}
