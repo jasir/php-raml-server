@@ -3,6 +3,8 @@
 namespace RamlServer;
 
 use Exception;
+use Raml\Method;
+use Raml\Schema\Definition\JsonSchemaDefinition;
 use Slim\Http\Request;
 
 class RequestValidator
@@ -20,10 +22,23 @@ class RequestValidator
 	 */
 	public static function validate(Request $request, array $routeDefinition)
 	{
+		self::validateHeaders($request, $routeDefinition);
+		self::validateQueryParameters($request, $routeDefinition);
+		self::validateBody($request, $routeDefinition);
+	}
 
-		//validate headers
-		foreach ($routeDefinition["method"]->getHeaders() as $namedParameter) {
 
+	/**
+	 * @param Request $request
+	 * @param array $routeDefinition
+	 * @throws MissingHeaderException
+	 */
+	public static function validateHeaders(Request $request, array $routeDefinition)
+	{
+		/** @var Method $method */
+		$method = $routeDefinition['method'];
+
+		foreach ($method->getHeaders() as $namedParameter) {
 			if ($namedParameter->isRequired() === true) {
 				// slim converting header key to first upper, @todo refactor in better way
 				$testKey = strtolower($namedParameter->getKey());
@@ -35,35 +50,53 @@ class RequestValidator
 				}
 			}
 		}
+	}
 
-		// validate query parameters
-		foreach ($routeDefinition["method"]->getQueryParameters() as $namedParameter) {
+
+	/**
+	 * @param Request $request
+	 * @param array $routeDefinition
+	 * @throws MissingQueryParameterException
+	 */
+	protected static function validateQueryParameters(Request $request, array $routeDefinition)
+	{
+		/** @var Method $method */
+		$method = $routeDefinition['method'];
+		foreach ($method->getQueryParameters() as $namedParameter) {
 			if ($namedParameter->isRequired() === true) {
-				if (!in_array($namedParameter->getKey(), array_keys($request->params()), true)) {
+				if (array_key_exists($namedParameter->getKey(), $request->params())) {
 					$message = array();
 					$message['missing_parameter'][$namedParameter->getKey()] = $namedParameter->getDescription();
 					throw new MissingQueryParameterException(json_encode($message));
 				}
 			}
 		}
+	}
 
-		// validate body
+
+	/**
+	 * @param Request $request
+	 * @param array $routeDefinition
+	 * @throws MissingBodyException
+	 */
+	protected static function validateBody(Request $request, array $routeDefinition)
+	{
+		/** @var JsonSchemaDefinition $schema */
 		$schema = null;
 		try {
-			$schema = $routeDefinition["method"]->getBodyByType("application/json")->getSchema();
+			$schema = $routeDefinition['method']->getBodyByType('application/json')->getSchema();
 		} catch (Exception $e) {
 		}
 
 		if ($schema !== null) {
 
 			if ($schema->getJsonObject()->required) {
-				if ($request->getBody() == "") {
+				if ($request->getBody() === '') {
 					$message = array();
-					$message["missing_body"]["schema"] = json_decode($schema->__toString());
+					$message['missing_body']['schema'] = json_decode((string) $schema);
 					throw new MissingBodyException(json_encode($message));
 				}
 			}
 		}
-
 	}
 }
