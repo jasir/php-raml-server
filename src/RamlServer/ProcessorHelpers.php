@@ -27,7 +27,10 @@ class ProcessorHelpers
 		foreach ($routeDefinition["method"]->getHeaders() as $namedParameter) {
 
 			if ($namedParameter->isRequired() === true) {
-				if (!in_array($namedParameter->getKey(), $request->headers->keys(), true)) {
+				// slim converting header key to first upper, @todo refactor in better way
+				$testKey = strtolower($namedParameter->getKey());
+				$lowerKeys = array_map('strtolower', $request->headers->keys());
+				if (!in_array($testKey, $lowerKeys, true)) {
 					$message = array();
 					$message['missing_header'][$namedParameter->getKey()] = $namedParameter->getDescription();
 					throw new MissingHeaderException(json_encode($message));
