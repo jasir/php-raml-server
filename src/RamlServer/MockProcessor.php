@@ -6,6 +6,7 @@
 namespace RamlServer;
 
 use Exception;
+use Nette\Utils\Json;
 use Slim\Helper\Set;
 use Slim\Http\Request;
 use Slim\Http\Response;
@@ -69,7 +70,7 @@ final class MockProcessor implements IProcessor
 		$this->router = $router;
 
 
-		$requestedExampleResponseCode = $this->request->headers->get("X-Http-Example");
+		$requestedExampleResponseCode = $this->request->headers->get('X-Http-Example');
 
 		if ($this->handleAlways === false && $requestedExampleResponseCode === null) {
 			return false;
@@ -77,7 +78,15 @@ final class MockProcessor implements IProcessor
 
 		$requestedExampleResponseCode = $requestedExampleResponseCode ?: 200;
 
-		if ($this->request->headers->get("X-Http-Schema") == 1) {
+		try {
+			ProcessorHelpers::validateRequest($request, $routeDefinition);
+		} catch (RamlRuntimeException $e) {
+			$this->sendError($e);
+			return true;
+		}
+
+
+		if ($this->request->headers->get('X-Http-Schema') == 1) {
 			$this->sendSchema($requestedExampleResponseCode);
 		} else {
 			$this->sendExample($requestedExampleResponseCode);
@@ -141,6 +150,21 @@ final class MockProcessor implements IProcessor
 		} catch (Exception $e) {
 			return null;
 		}
+	}
+
+
+	/**
+	 * @param RamlRuntimeException $e
+	 */
+	private function sendError(RamlRuntimeException $e)
+	{
+		$this->response->setStatus(500);
+		$this->response->setBody(Json::encode(
+			[
+				'error' => get_class($e),
+				'debug' => print_r($e->getMessage(), true)
+			]
+		));
 	}
 
 }

@@ -130,11 +130,13 @@ final class DefaultProcessor implements IProcessor
 				ProcessorHelpers::validateRequest($this->request, $this->routeDefinition);
 				// Standardize the response format
 				$this->prepareResponse($controller->$methodName());
+				return true;
 
 			} catch (Exception $e) {
 				// If validation is not successful, then return 400 Bad Request
 				$this->response->setStatus(400);
 				$this->response->setBody($e->getMessage());
+
 			}
 		}
 
