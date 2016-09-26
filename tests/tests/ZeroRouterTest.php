@@ -95,7 +95,7 @@ class ZeroRouterTest extends RamlServerTestCase
 			'www.api.com/api/some-api-here/v1.0/users/logged/?q=1'
 		);
 
-		$this->assertEquals('www.api.com', $router->getOption('server'));
+		$this->assertEquals(self::WWW_API_COM, $router->getOption('server'));
 		$this->assertEquals('default', $router->getOption('none', 'default'));
 
 		try {
@@ -134,30 +134,18 @@ class ZeroRouterTest extends RamlServerTestCase
 	 */
 	public function test_serveApi($uri, $expectedOutput)
 	{
-		list($pathInfo, $queryString) = explode('?', $uri, 2);
-
-		$defaultHeaders = [
-			'SERVER_NAME' => 'www.api.com',
-			'REQUEST_SCHEME' => 'http',
-			'REQUEST_URI' => $uri,
-			'PATH_INFO' => $pathInfo,
-			'QUERY_STRING' => $queryString,
-			'slim.url_scheme' => 'http'
-		];
-
-		Environment::mock($defaultHeaders);
+		$this->prepareMockedSlimEnvironment($uri);
 
 		$options = [
-			'server' => 'http://www.api.com',
+			'server' => self::WWW_API_COM, //www.api.com
 			'apiUriPart' => 'api',
 			'ramlDir' => __DIR__ . '/../assets/raml',
 			'ramlUriPart' => 'raml'
 		];
 
 
-		$url = 'http://www.api.com' . $uri;
-
-		$router = new ZeroRouter($options, $url);   
+		$url = self::WWW_API_COM . $uri;
+		$router = new ZeroRouter($options, $url);
 
 		$router->addProcessor(new MockProcessorFactory(false));
 		$router->addProcessor(new DefaultProcessorFactory('RamlServer'));
@@ -179,5 +167,6 @@ class ZeroRouterTest extends RamlServerTestCase
 		$this->assertEquals(200, $router->getResponse()->getStatus());
 
 	}
+
 
 }
