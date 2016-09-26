@@ -2,7 +2,6 @@
 
 namespace RamlServer;
 
-use Exception;
 use Raml\Method;
 use Raml\Schema\Definition\JsonSchemaDefinition;
 use Slim\Http\Request;
@@ -14,30 +13,29 @@ class RequestValidator
 	 * Run validation on headers, query parameters, and body against the route definition,
 	 * verifying that required items exist. It returns nothing, but throws Exceptions if
 	 * a validation does not pass
+	 *
 	 * @param Request $request
-	 * @param array $routeDefinition
+	 * @param Method $method
 	 * @throws MissingBodyException
 	 * @throws MissingHeaderException
 	 * @throws MissingQueryParameterException
+	 * @throws \Exception
 	 */
-	public static function validate(Request $request, array $routeDefinition)
+	public static function validate(Request $request, Method $method)
 	{
-		self::validateHeaders($request, $routeDefinition);
-		self::validateQueryParameters($request, $routeDefinition);
-		self::validateBody($request, $routeDefinition);
+		self::validateHeaders($request, $method);
+		self::validateQueryParameters($request, $method);
+		self::validateBody($request, $method);
 	}
 
 
 	/**
 	 * @param Request $request
-	 * @param array $routeDefinition
+	 * @param Method $method
 	 * @throws MissingHeaderException
 	 */
-	public static function validateHeaders(Request $request, array $routeDefinition)
+	public static function validateHeaders(Request $request, Method $method)
 	{
-		/** @var Method $method */
-		$method = $routeDefinition['method'];
-
 		foreach ($method->getHeaders() as $namedParameter) {
 			if ($namedParameter->isRequired() === true) {
 				// slim converting header key to first upper, @todo refactor in better way
@@ -56,13 +54,11 @@ class RequestValidator
 
 	/**
 	 * @param Request $request
-	 * @param array $routeDefinition
+	 * @param Method $method
 	 * @throws MissingQueryParameterException
 	 */
-	protected static function validateQueryParameters(Request $request, array $routeDefinition)
+	public static function validateQueryParameters(Request $request, Method $method)
 	{
-		/** @var Method $method */
-		$method = $routeDefinition['method'];
 		foreach ($method->getQueryParameters() as $namedParameter) {
 			if ($namedParameter->isRequired() === true) {
 				if (!array_key_exists($namedParameter->getKey(), $request->params())) {
@@ -78,20 +74,21 @@ class RequestValidator
 
 	/**
 	 * @param Request $request
-	 * @param array $routeDefinition
+	 * @param Method $method
 	 * @throws MissingBodyException
+	 * @throws \Exception
 	 */
-	protected static function validateBody(Request $request, array $routeDefinition)
+	public static function validateBody(Request $request, Method $method)
 	{
 		/** @var JsonSchemaDefinition $schema */
 		$schema = null;
-		try {
-			$schema = $routeDefinition['method']->getBodyByType('application/json')->getSchema();
-		} catch (Exception $e) {
+
+		$bodies = $method->getBodies();
+		if (isset($bodies['application/json'])) {
+			$schema = $method->getBodyByType('application/json')->getSchema();
 		}
 
 		if ($schema !== null) {
-
 			if ($schema->getJsonObject()->required) {
 				if ($request->getBody() === '') {
 					$message = array();

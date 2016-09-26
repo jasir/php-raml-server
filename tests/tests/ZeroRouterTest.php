@@ -119,11 +119,6 @@ class ZeroRouterTest extends RamlServerTestCase
 	{
 		return [
 			[
-				'uri' => '/api/test-api/v1.0/needParameter',
-				'expectedOutput' => '{ "error": "Missing required query parameter `fill`", "success": false }',
-				'expectedCode' => 500,
-			],
-			[
 				'uri' => '/api/test-api/v1.0/greet?who=Jaroslav',
 				'expectedOutput' => '{"status":200,"success":true,"data":{"greetings":"Hello, Jaroslav"}}',
 			],
@@ -131,7 +126,11 @@ class ZeroRouterTest extends RamlServerTestCase
 				'uri' => '/api/test-api/v1.0/kill?who=Mocked',
 				'expectedOutput' => '{"status":200,"success":true,"data":{"killed":"I shot John Doe!"}}'
 			],
-
+			[
+				'uri' => '/api/test-api/v1.0/needParameter',
+				'expectedOutput' => '{ "error": "Missing required query parameter `fill`", "success": false }',
+				'expectedCode' => 500,
+			],
 
 		];
 	}
