@@ -1,5 +1,6 @@
-#PHP RAML Server
-==============
+#PHP RAML Server 
+
+[![Build Status](https://travis-ci.org/jasir/php-raml-server.svg?branch=master)](https://travis-ci.org/jasir/php-raml-server)
 
 Forked from https://github.com/dethbird/PHP_RAML_Server
 
