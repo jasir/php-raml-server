@@ -111,6 +111,9 @@ class ZeroRouterTest extends RamlServerTestCase
 	}
 
 
+	/**
+	 * @return array
+	 */
 	public function requestsProvider()
 	{
 		return [
@@ -131,6 +134,7 @@ class ZeroRouterTest extends RamlServerTestCase
 	 * @dataProvider requestsProvider
 	 * @param $uri
 	 * @param $expectedOutput
+	 * @throws RamlRuntimeException
 	 */
 	public function test_serveApi($uri, $expectedOutput)
 	{

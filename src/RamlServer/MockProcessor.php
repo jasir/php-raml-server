@@ -7,7 +7,6 @@ namespace RamlServer;
 
 use Exception;
 use Nette\Utils\Json;
-use Slim\Helper\Set;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -79,7 +78,7 @@ final class MockProcessor implements IProcessor
 		$requestedExampleResponseCode = $requestedExampleResponseCode ?: 200;
 
 		try {
-			ProcessorHelpers::validateRequest($request, $routeDefinition);
+			RequestValidator::validate($request, $routeDefinition);
 		} catch (RamlRuntimeException $e) {
 			$this->sendError($e);
 			return true;
