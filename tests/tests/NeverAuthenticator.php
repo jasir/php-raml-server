@@ -2,8 +2,6 @@
 
 namespace RamlServer;
 
-use Slim\Slim;
-
 class NeverAuthenticator implements IAuthenticator
 {
 
