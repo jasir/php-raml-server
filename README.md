@@ -118,9 +118,9 @@ curl -X POST -H "X-Http-Example: 201"  http://54.148.30.160/v1.0/correction
 # 201 schema
 curl -X POST -H "X-Http-Example: 201" -H "X-Http-Schema: 1"  http://54.148.30.160/v1.0/correction
 # missing release id required query param
-curl -X POST -H "User-Id: 1234” -H "Vendor-Id: 5678"  http://54.148.30.160/v1.0/correction
+curl -X POST -H "User-Id: 1234" -H "Vendor-Id: 5678"  http://54.148.30.160/v1.0/correction
 # successful post (501 not implemented)
-curl -X POST -H "User-Id: 1234” -H "Vendor-Id: 5678"  http://54.148.30.160/v1.0/correction?release_id=9988776 
+curl -X POST -H "User-Id: 1234" -H "Vendor-Id: 5678"  http://54.148.30.160/v1.0/correction?release_id=9988776 
 ```
 
 ####Fetching Response Examples and Schemas

@@ -5,7 +5,6 @@ namespace RamlServer;
 
 
 use Nette\Utils\Json;
-use Slim\Environment;
 
 class ZeroRouterTest extends RamlServerTestCase
 {
@@ -112,6 +111,22 @@ class ZeroRouterTest extends RamlServerTestCase
 	}
 
 
+	public function test_authenticate()
+	{
+		$uri = '/api/test-api/v1.0/greet?who=Jaroslav';
+		$this->prepareMockedSlimEnvironment($uri);
+		$router = $this->createZeroRouter($uri);
+
+		$authenticator = new NeverAuthenticator();
+		$router->setAuthenticator($authenticator);
+		$router->serveApi();
+
+		$this->assertEquals(403, $router->getResponse()->getStatus());
+		$this->assertEquals('Invalid security context', $router->getResponse()->getBody());
+		
+	}
+	
+
 	/**
 	 * @return array
 	 */
@@ -147,7 +162,29 @@ class ZeroRouterTest extends RamlServerTestCase
 	public function test_serveApi($uri, $expectedOutput, $expectedCode = 200)
 	{
 		$this->prepareMockedSlimEnvironment($uri);
+		$router = $this->createZeroRouter($uri);
 
+		ob_start();
+		$router->serveApi();
+		$content = ob_get_clean();
+
+		$output = $this->normalizeWhitespaces(Json::encode(Json::decode($content), Json::PRETTY));
+		$expected = $this->normalizeWhitespaces(Json::encode(Json::decode($expectedOutput), Json::PRETTY));
+
+		$this->assertEquals($expected, $output);
+
+		$this->assertEquals($expectedCode, $router->getResponse()->getStatus());
+
+	}
+
+
+	/**
+	 * @param $uri
+	 * @return ZeroRouter
+	 * @throws RamlRuntimeException
+	 */
+	protected function createZeroRouter($uri)
+	{
 		$options = [
 			'server' => self::WWW_API_COM, //www.api.com
 			'apiUriPart' => 'api',
@@ -166,18 +203,7 @@ class ZeroRouterTest extends RamlServerTestCase
 		$this->assertTrue($router->isApiRequest());
 		$this->assertFalse($router->isRamlRequest());
 		$this->assertEquals('test-api', $router->getApiName());
-
-		ob_start();
-		$router->serveApi();
-		$content = ob_get_clean();
-
-		$output = $this->normalizeWhitespaces(Json::encode(Json::decode($content), Json::PRETTY));
-		$expected = $this->normalizeWhitespaces(Json::encode(Json::decode($expectedOutput), Json::PRETTY));
-
-		$this->assertEquals($expected, $output);
-
-		$this->assertEquals($expectedCode, $router->getResponse()->getStatus());
-
+		return $router;
 	}
 
 

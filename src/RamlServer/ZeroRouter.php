@@ -62,6 +62,9 @@ final class ZeroRouter
 	/** @var Slim */
 	private $app;
 
+	/** @var IAuthenticator */
+	private $authenticator;
+
 
 	/**
 	 * ZeroRouter constructor.
@@ -238,6 +241,24 @@ final class ZeroRouter
 
 
 	/**
+	 * @return IAuthenticator
+	 */
+	public function getAuthenticator()
+	{
+		return $this->authenticator;
+	}
+
+
+	/**
+	 * @param IAuthenticator $authenticator
+	 */
+	public function setAuthenticator($authenticator)
+	{
+		$this->authenticator = $authenticator;
+	}
+
+
+	/**
 	 * @return string
 	 */
 	private function getRamlRootDirectory()
@@ -350,8 +371,11 @@ final class ZeroRouter
 		// This is where a persistence layer ACL check would happen on authentication-related HTTP request items
 		$authenticate = function (Slim $app) {
 			return function () use ($app) {
-				if (false) {
-					$app->halt(403, 'Invalid security context');
+				$authenticator = $this->getAuthenticator();
+				if ($authenticator) {
+					if ($authenticator->authenticate($this) === false) {
+						$app->halt(403, 'Invalid security context');
+					}
 				}
 			};
 		};
