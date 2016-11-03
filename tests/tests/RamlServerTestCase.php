@@ -95,7 +95,10 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 	 */
 	protected function prepareMockedSlimEnvironment($uri)
 	{
-		list($pathInfo, $queryString) = explode('?', $uri, 2);
+
+		$parts = explode('?', $uri, 2);
+		$pathInfo = $parts[0];
+		$queryString = isset($parts[1]) ? $parts[1] : '';
 
 		$defaultHeaders = [
 			'SERVER_NAME' => self::WWW_METHOD . '://' . self::WWW_API_COM,

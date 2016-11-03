@@ -120,7 +120,6 @@ class ZeroRouterTest extends RamlServerTestCase
 		$authenticator = new NeverAuthenticator();
 		$router->setAuthenticator($authenticator);
 		$router->serveApi();
-
 		$this->assertEquals(403, $router->getResponse()->getStatus());
 		$this->assertEquals('Invalid security context', $router->getResponse()->getBody());
 		
@@ -197,7 +196,7 @@ class ZeroRouterTest extends RamlServerTestCase
 		$router = new ZeroRouter($options, $url);
 
 		$router->addProcessor(new MockProcessorFactory(false));
-		$router->addProcessor(new DefaultProcessorFactory('RamlServer'));
+		$router->addProcessor(new DefaultProcessorFactory(new DefaultControllerFactory('RamlServer')));
 		$router->addProcessor(new MockProcessorFactory(true));
 
 		$this->assertTrue($router->isApiRequest());

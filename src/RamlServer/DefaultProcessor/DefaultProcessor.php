@@ -6,7 +6,6 @@
 namespace RamlServer;
 
 use Exception;
-use Nette\DI\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -45,99 +44,48 @@ final class DefaultProcessor implements IProcessor
 	 * @var ZeroRouter
 	 */
 	private $router;
-	/**
-	 * @var string
-	 */
-	private $namespace;
+
 
 	/** @var bool */
 	private $throwNotExistingError = false;
 
 	/**
-	 * @var Container
+	 * @var IControllerFactory
 	 */
-	private $container;
+	private $controllerFactory;
 
 
 	/**
 	 * DefaultProcessor constructor.
-	 * @param string $namespace
-	 * @param Container $container
+	 * @param IControllerFactory $controllerFactory
 	 */
-	public function __construct($namespace, Container $container)
+	public function __construct(IControllerFactory $controllerFactory = null)
 	{
-		$this->namespace = $namespace;
-		$this->container = $container;
+		$this->controllerFactory = $controllerFactory ?: new DefaultControllerFactory();
 	}
 
 
 	/**
-	 * @param $apiName
-	 * @param $namespace
-	 * @return string
-	 */
-	static public function generateClassName($apiName, $namespace = null)
-	{
-		$className = self::snakeToCamel($apiName);
-		return $namespace ? $namespace . '\\' . $className : $className;
-	}
-
-
-	/**
-	 * ie. getSomething
-	 * @param $httpMethod
-	 * @param $path
-	 * @return string
-	 */
-	static public function generateMethodName($httpMethod, $path)
-	{
-		return strtolower($httpMethod) . self::snakeToCamel($path, ['/']);
-	}
-
-
-	/**
-	 * Converts snake_case to CamelCase, accepts both - and _
-	 * @param $snakeName
-	 * @return string
-	 */
-	public static function snakeToCamel($snakeName, $snakeChars = ['_', '-'])
-	{
-		return str_replace(' ', '', ucwords(str_replace($snakeChars, ' ', $snakeName)));
-	}
-
-
-	/**2
 	 * @param ZeroRouter $router
 	 * @param Request $request
-	 * @param Response $response    
+	 * @param Response $response
 	 * @param array $routeDefinition
 	 * @return bool
 	 * @throws RamlRuntimeException
 	 */
 	public function process(ZeroRouter $router, Request $request, Response $response, array $routeDefinition)
 	{
-
-
 		$this->routeDefinition = $routeDefinition;
 		$this->request = $request;
 		$this->response = $response;
 		$this->router = $router;
 
 		// Create controller class
-
-		$className = DefaultProcessor::generateClassName($this->router->getApiName(), $this->namespace);
-		$methodName = DefaultProcessor::generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
-
-
-		$controller = class_exists($className)
-			? new $className($request, $response, $router, $routeDefinition)
-			: null;
-
+		$controller = $this->controllerFactory->create($router, $request, $response, $routeDefinition);
 		if (!$controller) {
 			return false;
 		}
-
-		$this->container->callInjects($controller);
+		$methodName = $this->controllerFactory->generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
 
 		if (!method_exists($controller, $methodName)) {
 			if ($this->throwNotExistingError) {

@@ -3,30 +3,22 @@
 
 namespace RamlServer;
 
-
-use Nette\DI\Container;
-
 class DefaultProcessorFactory implements IProcessorFactory
 {
-	/**
-	 * @var string
-	 */
-	private $namespace;
-
-	/**
-	 * @var Container
-	 */
-	private $container;
 
 
 	/**
-	 * @param Container $container
-	 * @param $namespace
+	 * @var IControllerFactory
 	 */
-	public function __construct(Container $container, $namespace = null)
+	private $controllerFactory;
+
+
+	/**
+	 * @param IControllerFactory $controllerFactory
+	 */
+	public function __construct(IControllerFactory $controllerFactory = null)
 	{
-		$this->namespace = $namespace;
-		$this->container = $container;
+		$this->controllerFactory = $controllerFactory;
 	}
 
 
@@ -35,6 +27,6 @@ class DefaultProcessorFactory implements IProcessorFactory
 	 */
 	public function create()
 	{
-		return new DefaultProcessor($this->namespace, $this->container);
+		return new DefaultProcessor($this->controllerFactory);
 	}
 }
