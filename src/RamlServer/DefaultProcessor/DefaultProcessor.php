@@ -78,7 +78,7 @@ final class DefaultProcessor implements IProcessor
 	 */
 	static public function generateClassName($apiName, $namespace = null)
 	{
-		$className = ProcessorHelpers::snakeToCamel($apiName);
+		$className = self::snakeToCamel($apiName);
 		return $namespace ? $namespace . '\\' . $className : $className;
 	}
 
@@ -91,7 +91,18 @@ final class DefaultProcessor implements IProcessor
 	 */
 	static public function generateMethodName($httpMethod, $path)
 	{
-		return strtolower($httpMethod) . ProcessorHelpers::snakeToCamel($path, ['/']);
+		return strtolower($httpMethod) . self::snakeToCamel($path, ['/']);
+	}
+
+
+	/**
+	 * Converts snake_case to CamelCase, accepts both - and _
+	 * @param $snakeName
+	 * @return string
+	 */
+	public static function snakeToCamel($snakeName, $snakeChars = ['_', '-'])
+	{
+		return str_replace(' ', '', ucwords(str_replace($snakeChars, ' ', $snakeName)));
 	}
 
 

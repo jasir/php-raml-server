@@ -99,6 +99,7 @@ class RequestValidator
 					throw new MissingBodyException(json_encode($message));
 				}
 			}
+			$schema->validate($request->getBody());
 		}
 	}
 }
