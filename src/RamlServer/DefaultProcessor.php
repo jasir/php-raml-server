@@ -6,6 +6,7 @@
 namespace RamlServer;
 
 use Exception;
+use Nette\DI\Container;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -52,14 +53,21 @@ final class DefaultProcessor implements IProcessor
 	/** @var bool */
 	private $throwNotExistingError = false;
 
+	/**
+	 * @var Container
+	 */
+	private $container;
+
 
 	/**
 	 * DefaultProcessor constructor.
 	 * @param string $namespace
+	 * @param Container $container
 	 */
-	public function __construct($namespace)
+	public function __construct($namespace, Container $container)
 	{
 		$this->namespace = $namespace;
+		$this->container = $container;
 	}
 
 
@@ -98,6 +106,7 @@ final class DefaultProcessor implements IProcessor
 	public function process(ZeroRouter $router, Request $request, Response $response, array $routeDefinition)
 	{
 
+
 		$this->routeDefinition = $routeDefinition;
 		$this->request = $request;
 		$this->response = $response;
@@ -108,6 +117,7 @@ final class DefaultProcessor implements IProcessor
 		$className = DefaultProcessor::generateClassName($this->router->getApiName(), $this->namespace);
 		$methodName = DefaultProcessor::generateMethodName($this->routeDefinition['type'], $this->routeDefinition['path']);
 
+
 		$controller = class_exists($className)
 			? new $className($request, $response, $router, $routeDefinition)
 			: null;
@@ -115,6 +125,8 @@ final class DefaultProcessor implements IProcessor
 		if (!$controller) {
 			return false;
 		}
+
+		$this->container->callInjects($controller);
 
 		if (!method_exists($controller, $methodName)) {
 			if ($this->throwNotExistingError) {
