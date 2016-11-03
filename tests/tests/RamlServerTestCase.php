@@ -92,8 +92,9 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 
 	/**
 	 * @param $uri
+	 * @param string $requestMethod GET|POST
 	 */
-	protected function prepareMockedSlimEnvironment($uri)
+	protected function prepareMockedSlimEnvironment($uri, $requestMethod = 'GET', $rawBody = '')
 	{
 
 		$parts = explode('?', $uri, 2);
@@ -106,7 +107,9 @@ abstract class RamlServerTestCase extends \PHPUnit_Framework_TestCase
 			'REQUEST_URI' => $uri,
 			'PATH_INFO' => $pathInfo,
 			'QUERY_STRING' => $queryString,
-			'slim.url_scheme' => self::WWW_METHOD
+			'slim.url_scheme' => self::WWW_METHOD,
+			'REQUEST_METHOD' => $requestMethod,
+			'slim.input' => $rawBody,
 		];
 
 		Environment::mock($defaultHeaders);

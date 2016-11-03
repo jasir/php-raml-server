@@ -4,6 +4,23 @@ version: v1.0
 mediaType:  application/json
 baseUri: http://www.api.com
 
+/validateBodyIncluded:
+  description: I need valid json body
+  post:
+    body:
+      application/json:
+        schema: !include body-schema.json
+        example: |
+          {
+            "songId": "550e8400-e29b-41d4-a716-446655440000",
+            "songTitle": "Get Lucky",
+            "albumId": "183100e3-0e2b-4404-a716-66104d440550"
+          }
+
+
+
+
+
 /greet:
   get:
     queryParameters:
@@ -42,4 +59,36 @@ baseUri: http://www.api.com
     responses:
       200:
         description: I was filled
+
+
+/validateBody:
+  description: I need valid json body
+  post:
+    body:
+      application/json:
+        schema: |
+          {
+            "type": "object",
+            "$schema": "http://json-schema.org/draft-03/schema",
+            "id": "http://jsonschema.net",
+            "required": true,
+            "properties": {
+              "songTitle": {
+                "type": "string",
+                "required": true
+              },
+              "albumId": {
+                "type": "string",
+                "required": true,
+                "minLength": 36,
+                "maxLength": 36
+              }
+            }
+          }
+        example: |
+          {
+            "songId": "550e8400-e29b-41d4-a716-446655440000",
+            "songTitle": "Get Lucky",
+            "albumId": "183100e3-0e2b-4404-a716-66104d440550"
+          }
 
