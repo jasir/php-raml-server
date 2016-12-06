@@ -7,6 +7,7 @@ namespace RamlServer;
 
 use Exception;
 use Nette\Utils\Json;
+use Nette\Utils\JsonException;
 use Slim\Http\Request;
 use Slim\Http\Response;
 
@@ -48,7 +49,6 @@ final class MockProcessor implements IProcessor
 	 */
 	public function __construct($handleAlways)
 	{
-
 		$this->handleAlways = $handleAlways;
 	}
 
@@ -59,6 +59,8 @@ final class MockProcessor implements IProcessor
 	 * @param Response $response
 	 * @param array $routeDefinition
 	 * @return bool
+	 * @throws Exception
+	 * @throws JsonException
 	 */
 	public function process(ZeroRouter $router, Request $request, Response $response, array $routeDefinition)
 	{
@@ -143,6 +145,7 @@ final class MockProcessor implements IProcessor
 	 */
 	private function getSchemaResponseBody($responseCode = 200)
 	{
+
 		$responses = $this->routeDefinition["method"]->getResponses();
 		try {
 			return $responses[$responseCode]->getBodyByType("application/json")->getSchema();
@@ -154,7 +157,7 @@ final class MockProcessor implements IProcessor
 
 	/**
 	 * @param RamlRuntimeException $e
-	 * @throws \Nette\Utils\JsonException
+	 * @throws JsonException
 	 */
 	private function sendError(RamlRuntimeException $e)
 	{

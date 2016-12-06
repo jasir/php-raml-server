@@ -89,6 +89,7 @@ final class DefaultProcessor implements IProcessor
 
 		if (!method_exists($controller, $methodName)) {
 			if ($this->throwNotExistingError) {
+				$className = get_class($controller);
 				throw new RamlRuntimeException("Not existing method {$className}:{$methodName}");
 			}
 			return false;
