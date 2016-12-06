@@ -413,6 +413,7 @@ final class ZeroRouter
 					foreach ($this->factories as $processorFactory) {
 						$processor = $processorFactory instanceof IProcessorFactory ? $processorFactory->create() : $processorFactory();
 						if ($handled = $processor->process($this, $request, $response, $route) === true) {
+							$response->headers['X-Raml-Processor'] = get_class($processorFactory);
 							break;
 						}
 					}
