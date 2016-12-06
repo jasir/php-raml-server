@@ -21,6 +21,7 @@ class DefaultControllerFactoryTest extends RamlServerTestCase
 		$factory = new DefaultControllerFactory();
 		$this->assertEquals('getSearch', $factory->generateMethodName('GET', '/search'));
 		$this->assertEquals('getUsersSearch', $factory->generateMethodName('GET', '/users/search'));
+		$this->assertEquals('getUsersNsSomethingBad', $factory->generateMethodName('GET', '/users/ns.something-bad'));
 
 	}
 

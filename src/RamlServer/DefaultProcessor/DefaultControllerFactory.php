@@ -63,7 +63,7 @@ class DefaultControllerFactory implements IControllerFactory
 	 */
 	public function generateMethodName($httpMethod, $path)
 	{
-		return strtolower($httpMethod) . self::snakeToCamel($path, ['/']);
+		return strtolower($httpMethod) . self::snakeToCamel($path, ['/', '.', '_', '-']);
 	}
 
 
@@ -73,7 +73,7 @@ class DefaultControllerFactory implements IControllerFactory
 	 * @param array $snakeChars
 	 * @return string
 	 */
-	public static function snakeToCamel($snakeName, array $snakeChars = ['_', '-'])
+	public static function snakeToCamel($snakeName, array $snakeChars = ['_', '-', '.'])
 	{
 		return str_replace(' ', '', ucwords(str_replace($snakeChars, ' ', $snakeName)));
 	}
