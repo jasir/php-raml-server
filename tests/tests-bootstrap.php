@@ -6,7 +6,7 @@ define('APPLICATION_PATH', __DIR__ . "/..");
 
 require APPLICATION_PATH . '/vendor/autoload.php';
 
-Debugger::enable(Debugger::DEBUG, __DIR__);
+Debugger::enable(Debugger::DEBUG, __DIR__ . '/log');
 
 
 //RobotLoader
