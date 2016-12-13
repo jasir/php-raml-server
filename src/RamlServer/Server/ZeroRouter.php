@@ -341,7 +341,11 @@ final class ZeroRouter
 
 			//at least api-name and version must be part of url
 			if ((count($parts) >= 3) && (!empty($parts[0])) && (!empty($parts[1]))) {
-				list($this->apiName, $this->version, $this->ramlFile) = $parts;
+				$parsedUrl = parse_url($this->uri);
+				$paths = explode('/', $parsedUrl['path']);
+				$this->ramlFile = end($paths);
+
+				list($this->apiName, $this->version) = $parts;
 				$this->isRaml = true;
 			}
 		}
