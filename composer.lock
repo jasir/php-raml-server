@@ -4,55 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "78c38a3efac6e08984dad2faff2bbc1a",
-    "content-hash": "91234c12d075983aa0978c8c30516c13",
+    "content-hash": "9d823b70686f007fb7cf640aa1c42310",
     "packages": [
-        {
-            "name": "alecsammon/php-raml-parser",
-            "version": "2.1.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/alecsammon/php-raml-parser.git",
-                "reference": "55017c677dc91f171189a6a1f46fbcb552557b7b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/alecsammon/php-raml-parser/zipball/55017c677dc91f171189a6a1f46fbcb552557b7b",
-                "reference": "55017c677dc91f171189a6a1f46fbcb552557b7b",
-                "shasum": ""
-            },
-            "require": {
-                "justinrainbow/json-schema": "~1.5",
-                "oodle/inflect": "~0.2",
-                "php": ">=5.4",
-                "symfony/routing": "~2.5",
-                "symfony/yaml": "~2.6"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*",
-                "satooshi/php-coveralls": "~0.6",
-                "squizlabs/php_codesniffer": "@dev"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Raml\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Alec Sammon",
-                    "email": "alec.sammon@googlemail.com"
-                }
-            ],
-            "description": "A RAML parser built in php",
-            "homepage": "https://github.com/alecsammon/php-raml-parser",
-            "time": "2016-06-11 08:57:14"
-        },
         {
             "name": "guzzlehttp/guzzle",
             "version": "6.0.2",
@@ -113,7 +66,7 @@
                 "rest",
                 "web service"
             ],
-            "time": "2015-07-04 20:09:24"
+            "time": "2015-07-04T20:09:24+00:00"
         },
         {
             "name": "guzzlehttp/promises",
@@ -164,7 +117,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2016-05-18 16:56:05"
+            "time": "2016-05-18T16:56:05+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -222,7 +175,53 @@
                 "stream",
                 "uri"
             ],
-            "time": "2016-06-24 23:00:38"
+            "time": "2016-06-24T23:00:38+00:00"
+        },
+        {
+            "name": "jasir/php-raml-parser",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jasir/php-raml-parser.git",
+                "reference": "4c42ca51b9562d942fdfc482c6ce6c80e23799d5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jasir/php-raml-parser/zipball/4c42ca51b9562d942fdfc482c6ce6c80e23799d5",
+                "reference": "4c42ca51b9562d942fdfc482c6ce6c80e23799d5",
+                "shasum": ""
+            },
+            "require": {
+                "justinrainbow/json-schema": "~1.5",
+                "oodle/inflect": "~0.2",
+                "php": ">=5.4",
+                "symfony/routing": "~2.5",
+                "symfony/yaml": "~2.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "satooshi/php-coveralls": "~0.6",
+                "squizlabs/php_codesniffer": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Raml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alec Sammon",
+                    "email": "alec.sammon@googlemail.com"
+                }
+            ],
+            "description": "A RAML parser built in php",
+            "homepage": "https://github.com/alecsammon/php-raml-parser",
+            "time": "2016-11-03 15:53:28"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -288,7 +287,7 @@
                 "json",
                 "schema"
             ],
-            "time": "2016-01-25 15:43:01"
+            "time": "2016-01-25T15:43:01+00:00"
         },
         {
             "name": "nette/caching",
@@ -350,7 +349,7 @@
             ],
             "description": "Nette Caching Component",
             "homepage": "https://nette.org",
-            "time": "2016-07-21 12:11:37"
+            "time": "2016-07-21T12:11:37+00:00"
         },
         {
             "name": "nette/finder",
@@ -406,7 +405,7 @@
             ],
             "description": "Nette Finder: Files Searching",
             "homepage": "https://nette.org",
-            "time": "2016-05-17 15:49:06"
+            "time": "2016-05-17T15:49:06+00:00"
         },
         {
             "name": "nette/robot-loader",
@@ -464,7 +463,7 @@
             ],
             "description": "Nette RobotLoader: comfortable autoloading",
             "homepage": "https://nette.org",
-            "time": "2016-05-17 15:49:40"
+            "time": "2016-05-17T15:49:40+00:00"
         },
         {
             "name": "nette/utils",
@@ -525,7 +524,7 @@
             ],
             "description": "Nette Utility Classes",
             "homepage": "https://nette.org",
-            "time": "2016-06-17 13:15:10"
+            "time": "2016-06-17T13:15:10+00:00"
         },
         {
             "name": "oodle/inflect",
@@ -575,7 +574,7 @@
                 "singularize",
                 "urlify"
             ],
-            "time": "2013-11-30 06:16:23"
+            "time": "2013-11-30T06:16:23+00:00"
         },
         {
             "name": "psr/http-message",
@@ -625,7 +624,7 @@
                 "request",
                 "response"
             ],
-            "time": "2016-08-06 14:39:51"
+            "time": "2016-08-06T14:39:51+00:00"
         },
         {
             "name": "slim/extras",
@@ -676,7 +675,7 @@
                 "middleware",
                 "templating"
             ],
-            "time": "2013-01-07 17:56:10"
+            "time": "2013-01-07T17:56:10+00:00"
         },
         {
             "name": "slim/slim",
@@ -722,7 +721,7 @@
                 "rest",
                 "router"
             ],
-            "time": "2015-03-08 18:41:17"
+            "time": "2015-03-08T18:41:17+00:00"
         },
         {
             "name": "symfony/routing",
@@ -797,7 +796,7 @@
                 "uri",
                 "url"
             ],
-            "time": "2016-08-16 14:56:08"
+            "time": "2016-08-16T14:56:08+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -846,7 +845,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-09-02 01:57:56"
+            "time": "2016-09-02T01:57:56+00:00"
         },
         {
             "name": "tracy/tracy",
@@ -908,10 +907,56 @@
                 "debugger",
                 "nette"
             ],
-            "time": "2016-07-31 16:43:38"
+            "time": "2016-07-31T16:43:38+00:00"
         }
     ],
     "packages-dev": [
+        {
+            "name": "alecsammon/php-raml-parser",
+            "version": "2.1.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/alecsammon/php-raml-parser.git",
+                "reference": "55017c677dc91f171189a6a1f46fbcb552557b7b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/alecsammon/php-raml-parser/zipball/55017c677dc91f171189a6a1f46fbcb552557b7b",
+                "reference": "55017c677dc91f171189a6a1f46fbcb552557b7b",
+                "shasum": ""
+            },
+            "require": {
+                "justinrainbow/json-schema": "~1.5",
+                "oodle/inflect": "~0.2",
+                "php": ">=5.4",
+                "symfony/routing": "~2.5",
+                "symfony/yaml": "~2.6"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.*",
+                "satooshi/php-coveralls": "~0.6",
+                "squizlabs/php_codesniffer": "@dev"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Raml\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alec Sammon",
+                    "email": "alec.sammon@googlemail.com"
+                }
+            ],
+            "description": "A RAML parser built in php",
+            "homepage": "https://github.com/alecsammon/php-raml-parser",
+            "time": "2016-06-11T08:57:14+00:00"
+        },
         {
             "name": "doctrine/instantiator",
             "version": "1.0.5",
@@ -964,7 +1009,7 @@
                 "constructor",
                 "instantiate"
             ],
-            "time": "2015-06-14 21:17:01"
+            "time": "2015-06-14T21:17:01+00:00"
         },
         {
             "name": "janmarek/mockista",
@@ -1018,7 +1063,7 @@
                 "testing",
                 "tests"
             ],
-            "time": "2015-01-26 04:10:48"
+            "time": "2015-01-26T04:10:48+00:00"
         },
         {
             "name": "myclabs/deep-copy",
@@ -1060,7 +1105,7 @@
                 "object",
                 "object graph"
             ],
-            "time": "2016-09-16 13:37:59"
+            "time": "2016-09-16T13:37:59+00:00"
         },
         {
             "name": "phpdocumentor/reflection-common",
@@ -1114,7 +1159,7 @@
                 "reflection",
                 "static analysis"
             ],
-            "time": "2015-12-27 11:43:31"
+            "time": "2015-12-27T11:43:31+00:00"
         },
         {
             "name": "phpdocumentor/reflection-docblock",
@@ -1159,7 +1204,7 @@
                 }
             ],
             "description": "With this component, a library can provide support for annotations via DocBlocks or otherwise retrieve information that is embedded in a DocBlock.",
-            "time": "2016-06-10 09:48:41"
+            "time": "2016-06-10T09:48:41+00:00"
         },
         {
             "name": "phpdocumentor/type-resolver",
@@ -1206,7 +1251,7 @@
                     "email": "me@mikevanriel.com"
                 }
             ],
-            "time": "2016-06-10 07:14:17"
+            "time": "2016-06-10T07:14:17+00:00"
         },
         {
             "name": "phpspec/prophecy",
@@ -1268,7 +1313,7 @@
                 "spy",
                 "stub"
             ],
-            "time": "2016-06-07 08:13:47"
+            "time": "2016-06-07T08:13:47+00:00"
         },
         {
             "name": "phpunit/php-code-coverage",
@@ -1331,7 +1376,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-07-26 14:39:29"
+            "time": "2016-07-26T14:39:29+00:00"
         },
         {
             "name": "phpunit/php-file-iterator",
@@ -1378,7 +1423,7 @@
                 "filesystem",
                 "iterator"
             ],
-            "time": "2015-06-21 13:08:43"
+            "time": "2015-06-21T13:08:43+00:00"
         },
         {
             "name": "phpunit/php-text-template",
@@ -1419,7 +1464,7 @@
             "keywords": [
                 "template"
             ],
-            "time": "2015-06-21 13:50:34"
+            "time": "2015-06-21T13:50:34+00:00"
         },
         {
             "name": "phpunit/php-timer",
@@ -1463,7 +1508,7 @@
             "keywords": [
                 "timer"
             ],
-            "time": "2016-05-12 18:03:57"
+            "time": "2016-05-12T18:03:57+00:00"
         },
         {
             "name": "phpunit/php-token-stream",
@@ -1512,7 +1557,7 @@
             "keywords": [
                 "tokenizer"
             ],
-            "time": "2015-09-15 10:49:45"
+            "time": "2015-09-15T10:49:45+00:00"
         },
         {
             "name": "phpunit/phpunit",
@@ -1595,7 +1640,7 @@
                 "testing",
                 "xunit"
             ],
-            "time": "2016-09-21 14:40:13"
+            "time": "2016-09-21T14:40:13+00:00"
         },
         {
             "name": "phpunit/phpunit-mock-objects",
@@ -1654,7 +1699,7 @@
                 "mock",
                 "xunit"
             ],
-            "time": "2016-09-06 16:07:45"
+            "time": "2016-09-06T16:07:45+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
@@ -1699,7 +1744,7 @@
             ],
             "description": "Looks up which function or method a line of code belongs to",
             "homepage": "https://github.com/sebastianbergmann/code-unit-reverse-lookup/",
-            "time": "2016-02-13 06:45:14"
+            "time": "2016-02-13T06:45:14+00:00"
         },
         {
             "name": "sebastian/comparator",
@@ -1763,7 +1808,7 @@
                 "compare",
                 "equality"
             ],
-            "time": "2015-07-26 15:48:44"
+            "time": "2015-07-26T15:48:44+00:00"
         },
         {
             "name": "sebastian/diff",
@@ -1815,7 +1860,7 @@
             "keywords": [
                 "diff"
             ],
-            "time": "2015-12-08 07:14:41"
+            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "sebastian/environment",
@@ -1865,7 +1910,7 @@
                 "environment",
                 "hhvm"
             ],
-            "time": "2016-08-18 05:49:44"
+            "time": "2016-08-18T05:49:44+00:00"
         },
         {
             "name": "sebastian/exporter",
@@ -1932,7 +1977,7 @@
                 "export",
                 "exporter"
             ],
-            "time": "2016-06-17 09:04:28"
+            "time": "2016-06-17T09:04:28+00:00"
         },
         {
             "name": "sebastian/global-state",
@@ -1983,7 +2028,7 @@
             "keywords": [
                 "global state"
             ],
-            "time": "2015-10-12 03:26:01"
+            "time": "2015-10-12T03:26:01+00:00"
         },
         {
             "name": "sebastian/object-enumerator",
@@ -2029,7 +2074,7 @@
             ],
             "description": "Traverses array structures and object graphs to enumerate all referenced objects",
             "homepage": "https://github.com/sebastianbergmann/object-enumerator/",
-            "time": "2016-01-28 13:25:10"
+            "time": "2016-01-28T13:25:10+00:00"
         },
         {
             "name": "sebastian/recursion-context",
@@ -2082,7 +2127,7 @@
             ],
             "description": "Provides functionality to recursively process PHP variables",
             "homepage": "http://www.github.com/sebastianbergmann/recursion-context",
-            "time": "2015-11-11 19:50:13"
+            "time": "2015-11-11T19:50:13+00:00"
         },
         {
             "name": "sebastian/resource-operations",
@@ -2124,7 +2169,7 @@
             ],
             "description": "Provides a list of PHP built-in functions that operate on resources",
             "homepage": "https://www.github.com/sebastianbergmann/resource-operations",
-            "time": "2015-07-28 20:34:47"
+            "time": "2015-07-28T20:34:47+00:00"
         },
         {
             "name": "sebastian/version",
@@ -2167,7 +2212,7 @@
             ],
             "description": "Library that helps with managing the version number of Git-hosted PHP projects",
             "homepage": "https://github.com/sebastianbergmann/version",
-            "time": "2016-02-04 12:56:52"
+            "time": "2016-02-04T12:56:52+00:00"
         },
         {
             "name": "webmozart/assert",
@@ -2217,12 +2262,14 @@
                 "check",
                 "validate"
             ],
-            "time": "2016-08-09 15:02:57"
+            "time": "2016-08-09T15:02:57+00:00"
         }
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "jasir/php-raml-parser": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
