@@ -46,7 +46,6 @@ final class DefaultProcessor implements IProcessor
 	 */
 	private $router;
 
-
 	/** @var bool */
 	private $throwNotExistingError = false;
 
@@ -96,12 +95,10 @@ final class DefaultProcessor implements IProcessor
 			return false;
 		}
 
-
 		if ($controller) {
 			// Validate the request
 			try {
 				RequestValidator::validate($this->request, $this->routeDefinition['method']);
-
 			} catch (Exception $e) {
 				// If validation is not successful, then return 400 Bad Request
 				$this->response->setStatus(400);
@@ -114,13 +111,11 @@ final class DefaultProcessor implements IProcessor
 				$data = $controller->$methodName();
 				// Standardize the response format
 				$this->prepareResponse($data);
-
 			} catch (Exception $e) {
 				// If request is not successful, then return 500 Internal error
 				$this->response->setStatus(500);
 				$this->prepareErrorResponse($e);
 				return true;
-
 			}
 		}
 	}
