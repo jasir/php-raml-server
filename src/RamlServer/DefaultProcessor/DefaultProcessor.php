@@ -118,6 +118,7 @@ final class DefaultProcessor implements IProcessor
 				return true;
 			}
 		}
+		return true;
 	}
 
 
