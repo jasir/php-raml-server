@@ -8,6 +8,7 @@ namespace RamlServer;
 use Exception;
 use Slim\Http\Request;
 use Slim\Http\Response;
+use Tracy\Debugger;
 
 
 /**
@@ -97,22 +98,31 @@ final class DefaultProcessor implements IProcessor
 
 
 		if ($controller) {
+			// Validate the request
 			try {
-				// Validate the request
 				RequestValidator::validate($this->request, $this->routeDefinition['method']);
-				// Standardize the response format
-				$this->prepareResponse($controller->$methodName());
-				return true;
 
 			} catch (Exception $e) {
 				// If validation is not successful, then return 400 Bad Request
 				$this->response->setStatus(400);
-				$this->response->setBody($e->getMessage());
+				$this->prepareErrorResponse($e);
+				return true;
+			}
+
+			// Process the request
+			try {
+				$data = $controller->$methodName();
+				// Standardize the response format
+				$this->prepareResponse($data);
+
+			} catch (Exception $e) {
+				// If request is not successful, then return 500 Internal error
+				$this->response->setStatus(500);
+				$this->prepareErrorResponse($e);
+				return true;
 
 			}
 		}
-
-		return true;
 	}
 
 
@@ -125,7 +135,6 @@ final class DefaultProcessor implements IProcessor
 	 *  Then the response body
 	 *
 	 * @param  \jsonObject $data what you want to go back in the data part of the response
-	 * @return string the final content that was set to the response body
 	 */
 	private function prepareResponse($data)
 	{
@@ -135,8 +144,31 @@ final class DefaultProcessor implements IProcessor
 		$response->data = $data;
 		$response = json_encode($response);
 		$this->response->setBody($response);
-		return $response;
 	}
 
+
+	/**
+	 * Build error response by given exception
+	 *
+	 * @see self::prepareResponse()
+	 * @param Exception $exception
+	 */
+	private function prepareErrorResponse(Exception $exception)
+	{
+		if (Debugger::$productionMode) {
+			return $this->prepareResponse([
+				'message' => 'Internal server error',
+			]);
+		}
+
+		$this->prepareResponse([
+			'code' => $exception->getCode(),
+			'message' => $exception->getMessage(),
+			'file' => $exception->getFile(),
+			'line' => $exception->getLine(),
+			'previous' => $exception->getPrevious(),
+			'trace' => $exception->getTraceAsString(),
+		]);
+	}
 
 }
