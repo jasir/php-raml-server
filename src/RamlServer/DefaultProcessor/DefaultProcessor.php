@@ -125,7 +125,6 @@ final class DefaultProcessor implements IProcessor
 	 *  Then the response body
 	 *
 	 * @param  \jsonObject $data what you want to go back in the data part of the response
-	 * @return string the final content that was set to the response body
 	 */
 	private function prepareResponse($data)
 	{
@@ -135,7 +134,6 @@ final class DefaultProcessor implements IProcessor
 		$response->data = $data;
 		$response = json_encode($response);
 		$this->response->setBody($response);
-		return $response;
 	}
 
 
