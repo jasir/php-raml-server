@@ -108,8 +108,12 @@ final class DefaultProcessor implements IProcessor
 		// Process the request
 		try {
 			$data = $controller->$methodName();
-			// Standardize the response format
-			$this->prepareResponse($data);
+			if ($data !== null) {
+				// Standardize the response format
+				$this->prepareResponse($data);
+			}
+
+
 		} catch (Exception $e) {
 			// If request is not successful, then return 500 Internal error
 			$this->response->setStatus(500);
