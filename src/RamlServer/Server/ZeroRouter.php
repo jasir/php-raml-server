@@ -411,6 +411,8 @@ final class ZeroRouter
 
 					$request = $this->getRequest();
 					$response = $this->getResponse();
+					// API definitions are assumed to have this Content-Type for all content returned, if not set explicitly
+					$response->headers->set('Content-Type', 'application/json');
 
 					$handled = false;
 
@@ -425,9 +427,6 @@ final class ZeroRouter
 					if ($handled === false) {
 						throw new RamlRuntimeException('No processor handled this API request.');
 					}
-
-					// API definitions are assumed to have this Content-Type for all content returned
-					$this->app->response->headers->set('Content-Type', 'application/json');
 				}
 			);
 
