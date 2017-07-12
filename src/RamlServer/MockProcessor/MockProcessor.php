@@ -130,12 +130,20 @@ final class MockProcessor implements IProcessor
 	 */
 	private function getExampleResponseBody($responseCode = 200)
 	{
-		$responses = $this->routeDefinition["method"]->getResponses();
-		try {
-			return $responses[$responseCode]->getBodyByType("application/json")->getExample();
-		} catch (Exception $e) {
-			return null;
+		/** @var \Raml\Response[] $responses */
+		$responses = $this->routeDefinition['method']->getResponses();
+		$accept = explode(',', $this->request->headers->get('Accept', ''));
+		if (in_array('text/html', $accept, true) && !in_array('application/json', $accept, true)) {
+			$accept[] = 'application/json';
 		}
+		foreach ($accept as $type) {
+			try {
+				return $responses[$responseCode]->getBodyByType($type)->getExample();
+			} catch (Exception $e) {
+				continue;
+			}
+		}
+		throw new \RuntimeException('Can not find response for Accept: ' . $this->request->headers->get('Accept', '') );
 	}
 
 

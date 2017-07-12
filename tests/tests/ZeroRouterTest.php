@@ -133,6 +133,17 @@ class ZeroRouterTest extends RamlServerTestCase
 	{
 		return [
 			[
+				'uri' => '/api/test-api/v1.0/giveXmlOrJson',
+				'expectedOutput' => '{ "a": "I am json" }',
+				'expectedCode' => 200,
+			],
+			[
+				'uri' => '/api/test-api/v1.0/giveXmlOrJson',
+				'expectedOutput' => '<xml>I am xml</xml>',
+				'expectedCode' => 200,
+				'accept' => 'application/xml',
+			],
+			[
 				'uri' => '/api/test-api/v1.0/greet?who=Jaroslav',
 				'expectedOutput' => '{"status":200,"success":true,"data":{"greetings":"Hello, Jaroslav"}}',
 			],
@@ -158,21 +169,26 @@ class ZeroRouterTest extends RamlServerTestCase
 	 * @throws RamlRuntimeException
 	 * @throws \Nette\Utils\JsonException
 	 */
-	public function test_serveApi($uri, $expectedOutput, $expectedCode = 200)
+	public function test_serveApi($uri, $expectedOutput, $expectedCode = 200, $accept = 'application/json')
 	{
-		$this->prepareMockedSlimEnvironment($uri);
+		$this->prepareMockedSlimEnvironment($uri, 'GET', '',  $accept);
 		$router = $this->createZeroRouter($uri);
 
 		ob_start();
 		$router->serveApi();
 		$content = ob_get_clean();
 
-		$output = $this->normalizeWhitespaces(Json::encode(Json::decode($content), Json::PRETTY));
-		$expected = $this->normalizeWhitespaces(Json::encode(Json::decode($expectedOutput), Json::PRETTY));
+		$this->assertEquals($expectedCode, $router->getResponse()->getStatus());
+
+		$output = $content;
+		$expected = $expectedOutput;
+		if ($accept === 'application/json' && !empty($output)) {
+			$output = $this->normalizeWhitespaces(Json::encode(Json::decode($content), Json::PRETTY));
+			$expected = $this->normalizeWhitespaces(Json::encode(Json::decode($expectedOutput), Json::PRETTY));
+		}
 
 		$this->assertEquals($expected, $output);
 
-		$this->assertEquals($expectedCode, $router->getResponse()->getStatus());
 
 	}
 
