@@ -29,6 +29,8 @@ use Slim\Slim;
 final class ZeroRouter
 {
 
+	public static $productionMode = false;
+
 	/** @var string */
 	private $uri;
 

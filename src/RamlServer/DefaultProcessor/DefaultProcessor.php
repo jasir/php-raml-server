@@ -133,7 +133,7 @@ final class DefaultProcessor implements IProcessor
 	 *
 	 *  Then the response body
 	 *
-	 * @param  \jsonObject $data what you want to go back in the data part of the response
+	 * @param array $data what you want to go back in the data part of the response
 	 */
 	private function prepareResponse($data)
 	{
@@ -154,7 +154,7 @@ final class DefaultProcessor implements IProcessor
 	 */
 	private function prepareErrorResponse(Exception $exception)
 	{
-		if (Debugger::$productionMode) {
+		if (ZeroRouter::$productionMode) {
 			return $this->prepareResponse([
 				'message' => 'Internal server error',
 			]);
