@@ -154,9 +154,11 @@ final class DefaultProcessor implements IProcessor
 	 */
 	private function prepareErrorResponse(Exception $exception)
 	{
+		$this->response->setStatus($exception->getCode() ?: 400);
+		
 		if (ZeroRouter::$productionMode) {
 			return $this->prepareResponse([
-				'message' => 'Internal server error',
+				'message' => 'Error: ' . $exception->getMessage(),
 			]);
 		}
 

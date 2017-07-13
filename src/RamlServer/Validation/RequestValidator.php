@@ -45,7 +45,7 @@ class RequestValidator
 				if (!in_array($testKey, $lowerKeys, true)) {
 					$key = $namedParameter->getKey();
 					throw new MissingHeaderException(
-						"Missing required header `$key`"
+						"Missing required header `$key`", 400
 					);
 				}
 			}
@@ -65,7 +65,7 @@ class RequestValidator
 				if (!array_key_exists($namedParameter->getKey(), $request->params())) {
 					$key = $namedParameter->getKey();
 					throw new MissingQueryParameterException(
-						"Missing required query parameter `$key`"
+						"Missing required query parameter `$key`", 400
 					);
 				}
 			}
