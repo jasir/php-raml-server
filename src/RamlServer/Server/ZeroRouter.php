@@ -153,7 +153,7 @@ final class ZeroRouter
 	 */
 	public function serveRamlFiles()
 	{
-		header('Content-Type: text/raml');
+		header('Content-Type: text/plain');
 		$localPath = $this->getRamlRootDirectory()
 			. '/' . $this->getApiName()
 			. '/' . $this->getVersion()
