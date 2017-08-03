@@ -29,6 +29,9 @@ use Slim\Slim;
 final class ZeroRouter
 {
 
+	/** @var callable[] */
+	public $onResponse = [];
+
 	public static $productionMode = false;
 
 	/** @var string */
@@ -428,6 +431,10 @@ final class ZeroRouter
 
 					if ($handled === false) {
 						throw new RamlRuntimeException('No processor handled this API request.');
+					}
+
+					foreach ($this->onResponse as $callback) {
+						$callback($request, $response);
 					}
 				}
 			);
