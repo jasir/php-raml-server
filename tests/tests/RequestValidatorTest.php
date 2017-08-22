@@ -53,6 +53,13 @@ EOF;
 	}
 
 
+	public function test_Neon_works_as_example()
+	{
+		$definition = $this->getParsedDefinition();
+
+	}
+
+	
 	/**
 	 * @return \Raml\ApiDefinition
 	 */
@@ -62,7 +69,8 @@ EOF;
 		$dir = __DIR__ . '/../assets/raml/test-api/v1.0';
 		return $parser->parseFromString(file_get_contents($dir . '/index.raml'), $dir);
 	}
-
+	
+	
 
 	/**
 	 * @param $path

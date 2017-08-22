@@ -5,6 +5,7 @@ namespace RamlServer;
 
 
 use Nette\Utils\Json;
+use Raml\ApiDefinition;
 
 class ZeroRouterTest extends RamlServerTestCase
 {
@@ -36,6 +37,15 @@ class ZeroRouterTest extends RamlServerTestCase
 		);
 
 		$this->assertFalse($router->isApiRequest());
+
+	}
+
+
+	public function test_getDefinition()
+	{
+		$object = $this->createZeroRouter('/api/test-api/v1.0/giveNeon') ;
+		$apiDefinition = $object->getParsedDefinition();
+		$this->assertInstanceOf(ApiDefinition::class, $apiDefinition);
 
 	}
 

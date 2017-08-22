@@ -103,3 +103,10 @@ baseUri: http://www.api.com
                 {"a": "I am json"}
             application/xml:
               example: !include some.xml
+
+/giveNeon:
+  get:
+    responses:
+      body:
+        application/json:
+          example: !include neon-example.neon

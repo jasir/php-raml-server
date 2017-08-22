@@ -285,7 +285,7 @@ final class ZeroRouter
 	 * @return ApiDefinition
 	 * @throws RamlRuntimeException
 	 */
-	private function getParsedDefinition()
+	public function getParsedDefinition()
 	{
 		if ($this->cache) {
 			$definition = $this->cache->load($this->getApiIndexFile());
@@ -317,6 +317,7 @@ final class ZeroRouter
 		}
 		$source = file_get_contents($ramlIndexPath);
 		$parser = new Parser();
+		$parser->addFileLoader(new NeonLoader);
 		return $parser->parseFromString($source, $this->getApiDirectory());
 	}
 
